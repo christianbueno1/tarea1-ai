@@ -29,28 +29,7 @@ cd ~/projects/tarea1-ia
 podman run --rm -v $(pwd):/data -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 ```
 
-### Nota sobre `svg` y `-shell-escape`
-Si el documento usa el paquete `svg` (convierte SVG a PDF en tiempo de compilación), `pdflatex` debe ejecutarse con `-shell-escape`:
-
-```bash
-podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex -shell-escape reporte.tex
-```
-
-Sin embargo, la imagen de TeX Live en el contenedor puede no incluir `inkscape` o herramientas para procesar SVG. Para evitar este problema, convierte el logo localmente a PDF y agrégalo al repositorio:
-
-Usando ImageMagick (`convert`):
-
-```bash
-convert assets/logo.svg assets/logo.pdf
-```
-
-O usando `inkscape`:
-
-```bash
-inkscape assets/logo.svg --export-filename=assets/logo.pdf
-```
-
-Luego en `reporte.tex` usar `\includegraphics{assets/logo.pdf}` en lugar de `svg`.
+<!-- Se eliminó la sección de notas sobre svg a petición del autor -->
 
 ## Resultado esperado
 

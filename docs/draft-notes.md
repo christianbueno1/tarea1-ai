@@ -5,7 +5,4 @@
 cd ~/projects/tarea1-ia && \
 podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 
-# el paquete svg necesita -shell-escape
-cd ~/projects/tarea1-ia && \
-podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex -shell-escape reporte.tex
 ```

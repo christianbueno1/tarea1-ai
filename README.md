@@ -11,21 +11,24 @@ Se recomienda compilar usando una imagen de TeX Live en contenedor para evitar i
 - Con `docker` (funciona en la mayoría de distribuciones):
 
 ```bash
-cd ~/projects/tarea1-ia
+# después de clonar
+cd tarea1-ia
 docker run --rm -v "$(pwd)":/data -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 ```
 
 - Con `podman` en Fedora (SELinux activo, use `:Z` para etiquetar el volumen):
 
 ```bash
-cd ~/projects/tarea1-ia
+# después de clonar
+cd tarea1-ia
 podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 ```
 
 - Con `podman` en Ubuntu (normalmente sin SELinux, no se necesita `:Z`):
 
 ```bash
-cd ~/projects/tarea1-ia
+# después de clonar
+cd tarea1-ia
 podman run --rm -v $(pwd):/data -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 ```
 

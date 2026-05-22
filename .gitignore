@@ -16,6 +16,7 @@
 
 # PDF and related outputs
 *.pdf
+!assets/logo.pdf
 *.xdv
 *.dvi
 *.ps

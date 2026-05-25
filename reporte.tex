@@ -40,18 +40,32 @@
 	\vfill
 \end{titlepage}
 
+\begin{titlepage}
+	\centering
+	\vspace*{\fill}
+	{\LARGE \textbf{Topico a explorar:}\par}
+	\vspace{0.8cm}
+	{\Large Aplicaciones de IA o AA en sistemas de recomendación personalizados para plataformas de entretenimiento digital, basados en algoritmos híbridos de filtrado colaborativo y contenido.\par}
+	\vspace*{\fill}
+\end{titlepage}
+
 \newpage
 
-\section{Contenido temporal}
-Este es un contenido temporal para continuar con la estructura del reporte.
+\section{Introducción al tópico}
+Los sistemas de recomendación híbridos combinan el filtrado colaborativo, que analiza el comportamiento y las preferencias de usuarios similares, con el filtrado basado en contenido, que examina las características de los elementos o productos. Esta combinación busca reducir las limitaciones de cada enfoque por separado y generar sugerencias más precisas y personalizadas para plataformas de entretenimiento digital \cite{DataMListic-collaborative-filtering,DataMListic-content-based-recommendation}.
 
-Aquí se desarrollará el contenido de la Tarea \#1 en las siguientes iteraciones.
+\subsection{Componentes principales}
+\begin{itemize}
+\item \textbf{Filtrado colaborativo (CF):} identifica patrones en historiales de visualización, calificaciones o clics para agrupar usuarios con gustos similares y recomendar contenidos afines.
+\item \textbf{Filtrado basado en contenido (CB):} analiza atributos como géneros, actores, directores o descripciones para sugerir elementos parecidos a los que el usuario ya consume.
+\end{itemize}
 
-Como base inicial, se revisan enfoques híbridos que combinan filtrado colaborativo y filtrado por contenido
-para mejorar la recomendación en escenarios reales \cite{Wang_Xu_Li_Li_2025}.
-
-También se consideran propuestas para reforzar el filtrado colaborativo con relaciones entre características
-de contenido \cite{DBLP:journals/corr/abs-2005-08148}.
+\section{Problemas principales}
+\begin{itemize}
+\item \textbf{Cold-start:} los usuarios nuevos y el contenido recién publicado no tienen suficiente historial de interacción, por lo que es difícil hacer recomendaciones confiables.
+\item \textbf{Sparsity o datos dispersos:} en catálogos grandes, muy pocos usuarios interactúan con una pequeña fracción de los elementos disponibles, lo que dificulta medir similitudes sólidas.
+\item \textbf{Escalabilidad y procesamiento en tiempo real:} las plataformas digitales manejan grandes volúmenes de eventos de usuario y necesitan generar recomendaciones rápidas para millones de personas.
+\end{itemize}
 
 \bibliographystyle{ieeetr}
 \bibliography{bibliografia}

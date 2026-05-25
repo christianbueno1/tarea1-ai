@@ -5,4 +5,7 @@
 cd ~/projects/tarea1-ia && \
 podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 
+
+# compilar varias veces para resolver referencias cruzadas
+podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest bibtex reporte && podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex && podman run --rm -v $(pwd):/data:Z -w /data docker.io/texlive/texlive:latest pdflatex reporte.tex
 ```

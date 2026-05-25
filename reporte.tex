@@ -52,19 +52,521 @@
 \newpage
 
 \section{Introducción al tópico}
-Los sistemas de recomendación híbridos combinan el filtrado colaborativo, que analiza el comportamiento y las preferencias de usuarios similares, con el filtrado basado en contenido, que examina las características de los elementos o productos. Esta combinación busca reducir las limitaciones de cada enfoque por separado y generar sugerencias más precisas y personalizadas para plataformas de entretenimiento digital \cite{DataMListic-collaborative-filtering,DataMListic-content-based-recommendation}.
+Los sistemas de recomendación híbridos combinan filtrado colaborativo y filtrado basado en contenido para mejorar la precisión de las sugerencias en plataformas de entretenimiento digital. Este enfoque aprovecha tanto el comportamiento de usuarios similares como las características de los elementos recomendados, con el objetivo de reducir problemas como el \emph{cold start}, la dispersión de datos y las limitaciones de escalabilidad \cite{DataMListic-collaborative-filtering,DataMListic-content-based-recommendation}.
 
-\subsection{Componentes principales}
+\subsection{Algoritmo híbrido de filtrado colaborativo y basado en contenido}
+Son motores de recomendación que combinan el filtrado colaborativo, que analiza el comportamiento y preferencias de usuarios similares, con el filtrado basado en contenido, que analiza las características de los productos o películas. Su objetivo es superar los fallos que tienen estos métodos por separado, ofreciendo sugerencias mucho más precisas.
+
+\subsection{Componentes principales del sistema híbrido}
 \begin{itemize}
-\item \textbf{Filtrado colaborativo (CF):} identifica patrones en historiales de visualización, calificaciones o clics para agrupar usuarios con gustos similares y recomendar contenidos afines.
-\item \textbf{Filtrado basado en contenido (CB):} analiza atributos como géneros, actores, directores o descripciones para sugerir elementos parecidos a los que el usuario ya consume.
+\item \textbf{Filtrado colaborativo (FC):} analiza los hábitos del usuario. Encuentra patrones en los historiales de visualización, calificaciones o clics. Agrupa a usuarios similares. Si el usuario A y el usuario B comparten gustos, el sistema recomienda los programas favoritos del usuario A al usuario B \cite{DataMListic-collaborative-filtering}.
+\item \textbf{Filtrado basado en contenido (FBC):} analiza las características de los elementos. Evalúa el texto, los géneros, los directores, los actores o las frecuencias de audio. Si ves una película de ciencia ficción protagonizada por un actor específico, el sistema sugiere otras películas de ciencia ficción con ese mismo actor \cite{DataMListic-content-based-recommendation}.
 \end{itemize}
 
-\section{Problemas principales}
+\section{Filtrado colaborativo (FC)}
+Metodos matemáticos para calcular la similaridad entre usuarios o items.
 \begin{itemize}
-\item \textbf{Cold-start:} los usuarios nuevos y el contenido recién publicado no tienen suficiente historial de interacción, por lo que es difícil hacer recomendaciones confiables.
-\item \textbf{Sparsity o datos dispersos:} en catálogos grandes, muy pocos usuarios interactúan con una pequeña fracción de los elementos disponibles, lo que dificulta medir similitudes sólidas.
-\item \textbf{Escalabilidad y procesamiento en tiempo real:} las plataformas digitales manejan grandes volúmenes de eventos de usuario y necesitan generar recomendaciones rápidas para millones de personas.
+\item Coeficiente de similitud del coseno (Cosine Similarity): mide el ángulo entre los vectores de calificación de dos usuarios.
+\item Correlación de Pearson (Pearson Correlation): mide la relación lineal, ajustada para corregir el sesgo de calificación.
+\item Distancia euclidiana (Euclidean Distance): distancia geométrica en el espacio de calificaciones.
+\end{itemize}
+
+\subsection{Similitud del coseno en el filtrado colaborativo}
+\textbf{La similitud del coseno} mide cuán similares son dos usuarios (o dos elementos) al comparar el \textbf{ángulo entre sus vectores de calificación}.
+
+En lugar de enfocarse en los promedios de calificación como la correlación de Pearson, la similitud del coseno se centra en la \textbf{dirección de las preferencias}.
+
+\subsubsection*{Idea central}
+Imagina las calificaciones de cada usuario como un vector en un espacio multidimensional.
+
+Ejemplo:
+\begin{itemize}
+\item Usuario A $\rightarrow$ $[5,4,1,2]$
+\item Usuario B $\rightarrow$ $[4,3,2,1]$
+\end{itemize}
+
+Si los vectores apuntan en direcciones similares, los usuarios tienen gustos similares.
+
+\subsubsection*{Fórmula}
+\[
+\cos(\theta)=\frac{A\cdot B}{|A||B|}
+\]
+Donde:
+\begin{itemize}
+\item $(A \cdot B)$ = producto punto de los vectores
+\item $(|A|)$ = magnitud (longitud) del vector A
+\item $(|B|)$ = magnitud del vector B
+\end{itemize}
+
+\subsubsection*{Fórmula ampliada}
+\[
+\cos(\theta)=\frac{\sum_{i=1}^{n}A_iB_i}{\sqrt{\sum_{i=1}^{n}A_i^2}\sqrt{\sum_{i=1}^{n}B_i^2}}
+\]
+
+\subsubsection*{Rango de salida}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Valor & Significado \\
+\hline
+1 & Perfectamente similar \\
+0 & Sin similitud \\
+-1 & Dirección opuesta \\
+\hline
+\end{tabular}
+\end{center}
+
+En sistemas de recomendación con solo calificaciones positivas, los valores suelen estar entre:
+\[
+0 \rightarrow 1
+\]
+
+\subsubsection*{Ejemplo}
+Supongamos:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Película & Usuario A & Usuario B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Vectores:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+\subsubsection*{Paso 1 --- Producto punto}
+Multiplica los valores correspondientes y súmalos:
+\[
+A\cdot B=(5\times4)+(4\times3)+(1\times2)+(2\times1)=36
+\]
+
+\subsubsection*{Paso 2 --- Calcular magnitudes}
+Magnitud de A:
+\[
+|A|=\sqrt{5^2+4^2+1^2+2^2}=\sqrt{46}
+\]
+Magnitud de B:
+\[
+|B|=\sqrt{4^2+3^2+2^2+1^2}=\sqrt{30}
+\]
+
+\subsubsection*{Paso 3 --- Similitud final}
+\[
+\cos(\theta)=\frac{36}{\sqrt{46}\sqrt{30}}\approx0.97
+\]
+Resultado:
+\begin{itemize}
+\item Similitud muy alta
+\item Sus patrones de calificación apuntan casi en la misma dirección
+\end{itemize}
+
+\subsubsection*{Interpretación geométrica}
+La similitud del coseno mide el ángulo entre vectores:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Ángulo & Similitud \\
+\hline
+0$^{\circ}$ & 1 \\
+90$^{\circ}$ & 0 \\
+180$^{\circ}$ & -1 \\
+\hline
+\end{tabular}
+\end{center}
+Menor ángulo $\rightarrow$ usuarios más similares.
+
+\subsubsection*{Por qué la similitud del coseno es popular}
+\paragraph{1. Simple y rápida} Es eficiente para matrices dispersas de gran tamaño. Es muy común en sistemas de recomendación, motores de búsqueda, PLN (procesamiento del lenguaje natural), embeddings y búsqueda semántica.
+
+\paragraph{2. Funciona bien con datos dispersos} Los usuarios suelen calificar solo unos pocos elementos. La similitud del coseno puede comparar vectores dispersos de forma eficiente.
+
+\paragraph{3. Independencia de la magnitud} Se centra más en la orientación que en el tamaño absoluto.
+
+Ejemplo:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Usuario A & [5,5,5] \\
+\hline
+Usuario B & [1,1,1] \\
+\hline
+\end{tabular}
+\end{center}
+Similitud del coseno:
+\[
+=1
+\]
+porque la dirección es idéntica.
+
+\subsubsection*{Diferencia con la correlación de Pearson}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Similitud del coseno & Correlación de Pearson \\
+\hline
+Usa calificaciones directas & Centra las calificaciones alrededor de los promedios \\
+Mide el ángulo entre vectores & Mide la relación lineal \\
+No elimina el sesgo del usuario & Elimina el sesgo de calificación \\
+Cálculo más simple & Más robusta desde el punto de vista estadístico \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Limitación importante}
+La similitud del coseno puede tratar incorrectamente a estos usuarios como idénticos:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Usuario A & Siempre califica con 5 \\
+Usuario B & Siempre califica con 1 \\
+\hline
+\end{tabular}
+\end{center}
+porque sus vectores apuntan en la misma dirección.
+
+La correlación de Pearson corrige esto al restar la media.
+
+\subsubsection*{En el filtrado colaborativo}
+La similitud del coseno se usa en:
+\paragraph{Filtrado basado en usuarios} Encontrar usuarios con vectores de calificación similares.
+
+\paragraph{Filtrado basado en elementos} Encontrar elementos que suelen gustar juntos.
+
+Ejemplo:
+\begin{itemize}
+\item Usuarios a los que les gustó ``Interstellar''
+\item también les gustó ``Inception''
+\end{itemize}
+
+\subsubsection*{Uso moderno en ML}
+La similitud del coseno es extremadamente importante en los sistemas modernos de IA: bases de datos vectoriales, embeddings, transformadores, búsqueda semántica y generación aumentada por recuperación (RAG), porque los embeddings son vectores de alta dimensión y la similitud del coseno mide de forma eficiente la cercanía semántica.
+
+\subsection{Correlación de Pearson en el filtrado colaborativo}
+En el \textbf{filtrado colaborativo}, el objetivo es recomendar elementos a un usuario con base en las preferencias de otros usuarios similares.
+
+El \textbf{coeficiente de correlación de Pearson} es una medida estadística usada para determinar \textbf{qué tan similarmente dos usuarios califican los elementos}, corrigiendo al mismo tiempo las diferencias en los hábitos de calificación.
+
+Por ejemplo:
+\begin{itemize}
+\item El usuario A tiende a dar calificaciones altas a todo.
+\item El usuario B tiende a dar calificaciones más bajas en general.
+\end{itemize}
+
+Aunque sus calificaciones directas sean distintas, Pearson verifica si les gustan y les disgustan los \textbf{mismos tipos de elementos} con respecto a sus propios promedios.
+
+\subsubsection*{Intuición}
+Pearson responde a esta pregunta:
+
+``Cuando el usuario A califica algo por encima de su promedio normal, ¿el usuario B también lo califica por encima de su promedio?''
+
+Si la respuesta es sí $\rightarrow$ fuerte similitud positiva.
+
+\subsubsection*{Fórmula}
+\[
+r=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}
+\]
+Donde:
+\begin{itemize}
+\item $(x_i)$ = calificaciones del usuario X
+\item $(y_i)$ = calificaciones del usuario Y
+\item $(\bar{x})$ = promedio de calificaciones del usuario X
+\item $(\bar{y})$ = promedio de calificaciones del usuario Y
+\end{itemize}
+
+\subsubsection*{Rango de salida}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Valor & Significado \\
+\hline
++1 & Similitud positiva perfecta \\
+0 & Sin relación \\
+-1 & Preferencias opuestas \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Ejemplo}
+Supongamos que dos usuarios calificaron las mismas películas:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Película & Usuario A & Usuario B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Paso 1 --- Calcular los promedios de calificación}
+Promedio del usuario A:
+\[
+\bar{x}=\frac{5+4+1+2}{4}=3
+\]
+Promedio del usuario B:
+\[
+\bar{y}=\frac{4+3+2+1}{4}=2.5
+\]
+
+\paragraph{Paso 2 --- Centrar las calificaciones alrededor de su media}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Película & A & A-Prom & B & B-Prom \\
+\hline
+Avengers & 5 & 2 & 4 & 1.5 \\
+Batman & 4 & 1 & 3 & 0.5 \\
+Titanic & 1 & -2 & 2 & -0.5 \\
+Joker & 2 & -1 & 1 & -1.5 \\
+\hline
+\end{tabular}
+\end{center}
+
+Observa:
+\begin{itemize}
+\item Ambos usuarios califican las películas de superhéroes por encima del promedio.
+\item Ambos califican las películas más oscuras o dramáticas por debajo del promedio.
+\end{itemize}
+Esto indica gustos similares.
+
+\paragraph{Paso 3 --- Calcular la correlación}
+El numerador mide si las desviaciones se mueven juntas:
+\[
+(2)(1.5)+(1)(0.5)+(-2)(-0.5)+(-1)(-1.5)
+\]
+Los productos positivos indican preferencias alineadas.
+
+El resultado final es aproximadamente:
+\[
+r\approx0.83
+\]
+Esto significa:
+\begin{itemize}
+\item Fuerte similitud positiva
+\item Es probable que a los usuarios les guste contenido similar
+\end{itemize}
+
+\subsubsection*{Por qué Pearson es útil}
+\paragraph{1. Maneja el sesgo de calificación} Algunos usuarios siempre califican alto. Pearson elimina este sesgo al centrar las calificaciones alrededor del promedio de cada usuario.
+
+\paragraph{2. Se enfoca en patrones de preferencia} No le interesan solo los valores absolutos. En cambio, verifica qué les gusta a los usuarios más de lo habitual y qué les disgusta más de lo habitual.
+
+\subsubsection*{En los sistemas de recomendación}
+Si el usuario A es similar al usuario B y al usuario B le gustó una película que el usuario A no ha visto, se recomienda esa película al usuario A. Esto se llama \textbf{filtrado colaborativo basado en usuarios}.
+
+\subsubsection*{Comparación con la similitud del coseno}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Pearson & Coseno \\
+\hline
+Elimina el sesgo del usuario & Usa calificaciones directas \\
+Se enfoca en tendencias de calificación & Se enfoca en la dirección del vector \\
+Funciona mejor cuando los usuarios califican de forma distinta & Es más simple y rápida \\
+\hline
+\end{tabular}
+\end{center}
+
+Ejemplo:
+\begin{itemize}
+\item Usuario generoso vs. usuario estricto
+\item Pearson suele funcionar mejor.
+\end{itemize}
+
+\subsubsection*{Debilidades}
+\paragraph{Problema de datos dispersos} Si dos usuarios solo calificaron 1 o 2 elementos en común, la similitud puede ser poco confiable.
+
+\paragraph{Problema de arranque en frío} Los usuarios nuevos tienen pocas calificaciones, por lo que la correlación no puede calcularse bien.
+
+\subsubsection*{Uso en el mundo real}
+La correlación de Pearson se ha usado históricamente en motores de recomendación de películas, plataformas de recomendación musical, sugerencias de comercio electrónico y servicios de streaming. Los sistemas modernos suelen combinarla con factorización matricial, embeddings y recomendadores neuronales porque escalan mejor para millones de usuarios y elementos.
+
+\subsection{Distancia euclidiana en el filtrado colaborativo}
+\textbf{La distancia euclidiana} mide qué tan alejados están dos usuarios (o elementos) en el espacio de calificación.
+
+Es la distancia geométrica ordinaria que ya conoces de la geometría en 2D o 3D, generalizada a muchas dimensiones.
+
+En los sistemas de recomendación:
+\begin{itemize}
+\item menor distancia $\rightarrow$ usuarios más similares
+\item mayor distancia $\rightarrow$ usuarios menos similares
+\end{itemize}
+
+\subsubsection*{Idea central}
+Imagina a cada usuario como un punto en el espacio.
+
+Ejemplo:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Película & Usuario A & Usuario B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Vectores:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+La distancia euclidiana mide la distancia en línea recta entre estos dos puntos.
+
+\subsubsection*{Fórmula}
+\[
+d(A,B)=\sqrt{\sum_{i=1}^{n}(A_i-B_i)^2}
+\]
+Donde:
+\begin{itemize}
+\item $(A_i)$ = calificación del usuario A
+\item $(B_i)$ = calificación del usuario B
+\item $(n)$ = número de elementos en común
+\end{itemize}
+
+\subsubsection*{Ejemplo paso a paso}
+Usando:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+\paragraph{Paso 1 --- Calcular diferencias}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Película & A & B & A-B \\
+\hline
+Avengers & 5 & 4 & 1 \\
+Batman & 4 & 3 & 1 \\
+Titanic & 1 & 2 & -1 \\
+Joker & 2 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Paso 2 --- Elevar al cuadrado las diferencias}
+\[
+1^2+1^2+(-1)^2+1^2=4
+\]
+
+\paragraph{Paso 3 --- Raíz cuadrada}
+\[
+d(A,B)=\sqrt{4}=2
+\]
+La distancia euclidiana es:
+\[
+2
+\]
+
+\subsubsection*{Interpretación}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Distancia & Significado \\
+\hline
+0 & Calificaciones idénticas \\
+Pequeña & Usuarios similares \\
+Grande & Preferencias diferentes \\
+\hline
+\end{tabular}
+\end{center}
+
+A diferencia de la similitud del coseno o de la correlación de Pearson, la distancia euclidiana es una métrica de distancia, no una puntuación de similitud.
+
+\subsubsection*{Convertir distancia en similitud}
+Los sistemas de recomendación suelen convertir la distancia en similitud:
+\[
+similarity=\frac{1}{1+d(A,B)}
+\]
+Esto produce valores entre:
+\[
+0 \rightarrow 1
+\]
+
+Ejemplo:
+\[
+\frac{1}{1+2}=0.33
+\]
+
+\subsubsection*{Interpretación geométrica}
+En 2D:
+\[
+distance = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2}
+\]
+La distancia euclidiana extiende este concepto a dimensiones superiores.
+
+Si los usuarios califican 100 películas:
+\begin{itemize}
+\item cada película se convierte en una dimensión
+\item los usuarios se convierten en puntos en un espacio de 100 dimensiones
+\end{itemize}
+
+\subsubsection*{Ventajas}
+\paragraph{1. Fácil de entender} Es muy intuitiva desde el punto de vista matemático.
+
+\paragraph{2. Cálculo simple} Es eficiente para sistemas pequeños.
+
+\paragraph{3. Captura diferencias absolutas} Si los usuarios califican de forma muy distinta, la distancia aumenta claramente.
+
+\subsubsection*{Debilidades}
+\paragraph{1. Sensible a la escala de calificación} Si ambos usuarios gustan de las mismas cosas de forma relativa, la distancia euclidiana aún puede ser grande porque los valores directos difieren. Pearson maneja esto mejor.
+
+\paragraph{2. Problemas de datos dispersos} La mayoría de los usuarios califica solo unos pocos elementos. Los valores faltantes dificultan los cálculos de distancia.
+
+\paragraph{3. Problemas en alta dimensión} En espacios muy grandes, las distancias se vuelven menos significativas y muchos puntos parecen estar a una distancia similar. Esto se conoce como la \textbf{maldición de la dimensionalidad}.
+
+\subsubsection*{Comparación con Pearson y el coseno}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Método & Mide & ¿Maneja el sesgo de calificación? \\
+\hline
+Distancia euclidiana & Distancia geométrica absoluta & No \\
+Similitud del coseno & Ángulo entre vectores & No \\
+Correlación de Pearson & Relación después de centrar & Sí \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Recomendación práctica}
+Usa la distancia euclidiana cuando los datos estén normalizados, las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
+
+Usa Pearson cuando los usuarios tengan distintos hábitos de calificación y la corrección del sesgo sea importante.
+
+Usa el coseno cuando trabajes con vectores dispersos, embeddings o sistemas vectoriales a gran escala.
+
+\subsubsection*{Uso en el mundo real}
+La distancia euclidiana aparece en K-Nearest Neighbors (KNN), algoritmos de agrupamiento, detección de anomalías, prototipos de recomendación, visión por computador y espacios de características de aprendizaje automático.
+
+Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefieren la similitud del coseno, la factorización matricial y los embeddings neuronales porque escalan mejor y funcionan mejor con datos dispersos de alta dimensión.
+
+\section{Principales desafíos técnicos}
+\begin{itemize}
+\item \textbf{Problema de arranque en frío:} Los usuarios nuevos y el contenido digital recién publicado carecen de datos históricos de interacción, lo que limita severamente la eficacia de los enfoques colaborativos y basados en contenido.
+\item \textbf{Dispersión de datos:} En plataformas con enormes catálogos de entretenimiento, la proporción de interacciones de usuarios frente al contenido total disponible es extremadamente baja, lo que dificulta encontrar similitudes confiables entre usuarios o elementos.
+\item \textbf{Escalabilidad y procesamiento en tiempo real:} Las plataformas de entretenimiento digital requieren la transmisión y el procesamiento continuos de la telemetría de los usuarios. Calcular recomendaciones para millones de usuarios activos en tiempo real exige demasiado los recursos computacionales.
 \end{itemize}
 
 \bibliographystyle{ieeetr}

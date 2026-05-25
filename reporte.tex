@@ -52,19 +52,521 @@
 \newpage
 
 \section{Introducción al tópico}
-Los sistemas de recomendación híbridos combinan el filtrado colaborativo, que analiza el comportamiento y las preferencias de usuarios similares, con el filtrado basado en contenido, que examina las características de los elementos o productos. Esta combinación busca reducir las limitaciones de cada enfoque por separado y generar sugerencias más precisas y personalizadas para plataformas de entretenimiento digital \cite{DataMListic-collaborative-filtering,DataMListic-content-based-recommendation}.
+Los sistemas de recomendación híbridos combinan filtrado colaborativo y filtrado basado en contenido para mejorar la precisión de las sugerencias en plataformas de entretenimiento digital. Este enfoque aprovecha tanto el comportamiento de usuarios similares como las características de los elementos recomendados, con el objetivo de reducir problemas como el \emph{cold start}, la dispersión de datos y las limitaciones de escalabilidad \cite{DataMListic-collaborative-filtering,DataMListic-content-based-recommendation}.
 
-\subsection{Componentes principales}
+\subsection{Algoritmo híbrido de filtrado colaborativo y basado en contenido}
+Son motores de recomendación que combinan el filtrado colaborativo, que analiza el comportamiento y preferencias de usuarios similares, con el filtrado basado en contenido, que analiza las características de los productos o películas. Su objetivo es superar los fallos que tienen estos métodos por separado, ofreciendo sugerencias mucho más precisas.
+
+\subsection{Componentes principales del sistema híbrido}
 \begin{itemize}
-\item \textbf{Filtrado colaborativo (CF):} identifica patrones en historiales de visualización, calificaciones o clics para agrupar usuarios con gustos similares y recomendar contenidos afines.
-\item \textbf{Filtrado basado en contenido (CB):} analiza atributos como géneros, actores, directores o descripciones para sugerir elementos parecidos a los que el usuario ya consume.
+\item \textbf{Filtrado colaborativo (CF) (Collaborative Filtering):} analiza los hábitos del usuario. Encuentra patrones en los historiales de visualización, calificaciones o clics. Agrupa a usuarios similares. Si el usuario A y el usuario B comparten gustos, el sistema recomienda los programas favoritos del usuario A al usuario B \cite{DataMListic-collaborative-filtering}.
+\item \textbf{Filtrado basado en contenido (CB) (Content-Based Filtering):} analiza las características de los elementos. Evalúa el texto, los géneros, los directores, los actores o las frecuencias de audio. Si ves una película de ciencia ficción protagonizada por un actor específico, el sistema sugiere otras películas de ciencia ficción con ese mismo actor \cite{DataMListic-content-based-recommendation}.
 \end{itemize}
 
-\section{Problemas principales}
+\section{Collaborative Filtering (CF)}
+Metodos matemáticos para calcular la similaridad entre usuarios o items.
 \begin{itemize}
-\item \textbf{Cold-start:} los usuarios nuevos y el contenido recién publicado no tienen suficiente historial de interacción, por lo que es difícil hacer recomendaciones confiables.
-\item \textbf{Sparsity o datos dispersos:} en catálogos grandes, muy pocos usuarios interactúan con una pequeña fracción de los elementos disponibles, lo que dificulta medir similitudes sólidas.
-\item \textbf{Escalabilidad y procesamiento en tiempo real:} las plataformas digitales manejan grandes volúmenes de eventos de usuario y necesitan generar recomendaciones rápidas para millones de personas.
+\item Coeficiente de similitud del coseno (Cosine Similarity): mide el ángulo entre los vectores de calificación de dos usuarios.
+\item Correlación de Pearson (Pearson Correlation): mide la relación lineal, ajustada para corregir el sesgo de calificación.
+\item Distancia euclidiana (Euclidean Distance): distancia geométrica en el espacio de calificaciones.
+\end{itemize}
+
+\subsection{Cosine Similarity in Collaborative Filtering}
+\textbf{Cosine Similarity} measures how similar two users (or two items) are by comparing the \textbf{angle between their rating vectors}.
+
+Instead of focusing on rating averages like Pearson Correlation, cosine similarity focuses on the \textbf{direction of preferences}.
+
+\subsubsection*{Core Idea}
+Imagine each user's ratings as a vector in multidimensional space.
+
+Example:
+\begin{itemize}
+\item User A $\rightarrow$ $[5,4,1,2]$
+\item User B $\rightarrow$ $[4,3,2,1]$
+\end{itemize}
+
+If the vectors point in similar directions, the users have similar tastes.
+
+\subsubsection*{Formula}
+\[
+\cos(\theta)=\frac{A\cdot B}{|A||B|}
+\]
+Where:
+\begin{itemize}
+\item $(A \cdot B)$ = dot product of the vectors
+\item $(|A|)$ = magnitude (length) of vector A
+\item $(|B|)$ = magnitude of vector B
+\end{itemize}
+
+\subsubsection*{Expanded Formula}
+\[
+\cos(\theta)=\frac{\sum_{i=1}^{n}A_iB_i}{\sqrt{\sum_{i=1}^{n}A_i^2}\sqrt{\sum_{i=1}^{n}B_i^2}}
+\]
+
+\subsubsection*{Output Range}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Value & Meaning \\
+\hline
+1 & Perfectly similar \\
+0 & No similarity \\
+-1 & Opposite direction \\
+\hline
+\end{tabular}
+\end{center}
+
+In recommendation systems with positive ratings only, values are usually between:
+\[
+0 \rightarrow 1
+\]
+
+\subsubsection*{Example}
+Suppose:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Movie & User A & User B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Vectors:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+\subsubsection*{Step 1 --- Dot Product}
+Multiply corresponding values and sum them:
+\[
+A\cdot B=(5\times4)+(4\times3)+(1\times2)+(2\times1)=36
+\]
+
+\subsubsection*{Step 2 --- Compute Magnitudes}
+Magnitude of A:
+\[
+|A|=\sqrt{5^2+4^2+1^2+2^2}=\sqrt{46}
+\]
+Magnitude of B:
+\[
+|B|=\sqrt{4^2+3^2+2^2+1^2}=\sqrt{30}
+\]
+
+\subsubsection*{Step 3 --- Final Similarity}
+\[
+\cos(\theta)=\frac{36}{\sqrt{46}\sqrt{30}}\approx0.97
+\]
+Result:
+\begin{itemize}
+\item Very high similarity
+\item Their rating patterns point in nearly the same direction
+\end{itemize}
+
+\subsubsection*{Geometric Interpretation}
+Cosine similarity measures the angle between vectors:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Angle & Similarity \\
+\hline
+0$^{\circ}$ & 1 \\
+90$^{\circ}$ & 0 \\
+180$^{\circ}$ & -1 \\
+\hline
+\end{tabular}
+\end{center}
+Smaller angle $\rightarrow$ more similar users.
+
+\subsubsection*{Why Cosine Similarity Is Popular}
+\paragraph{1. Simple and Fast} Efficient for large sparse matrices. Very common in recommendation systems, search engines, NLP, embeddings and semantic search.
+
+\paragraph{2. Works Well with Sparse Data} Users usually rate only a few items. Cosine similarity can compare sparse vectors efficiently.
+
+\paragraph{3. Magnitude Independence} It focuses more on orientation than absolute size.
+
+Example:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+User A & [5,5,5] \\
+\hline
+User B & [1,1,1] \\
+\hline
+\end{tabular}
+\end{center}
+Cosine similarity:
+\[
+=1
+\]
+because the direction is identical.
+
+\subsubsection*{Difference from Pearson Correlation}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Cosine Similarity & Pearson Correlation \\
+\hline
+Uses raw ratings & Centers ratings around averages \\
+Measures vector angle & Measures linear relationship \\
+Does not remove user bias & Removes rating bias \\
+Simpler computation & More statistically robust \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Important Limitation}
+Cosine similarity may incorrectly treat these users as identical:
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+User A & Always rates 5 \\
+User B & Always rates 1 \\
+\hline
+\end{tabular}
+\end{center}
+because their vectors point in the same direction.
+
+Pearson correlation fixes this by subtracting the mean.
+
+\subsubsection*{In Collaborative Filtering}
+Cosine similarity is used in:
+\paragraph{User-Based Filtering} Find users with similar rating vectors.
+
+\paragraph{Item-Based Filtering} Find items frequently liked together.
+
+Example:
+\begin{itemize}
+\item Users who liked ``Interstellar''
+\item also liked ``Inception''
+\end{itemize}
+
+\subsubsection*{Modern ML Usage}
+Cosine similarity is extremely important in modern AI systems: vector databases, embeddings, transformers, semantic search and retrieval-augmented generation (RAG), because embeddings are high-dimensional vectors and cosine similarity efficiently measures semantic closeness.
+
+\subsection{Pearson Correlation in Collaborative Filtering}
+In \textbf{Collaborative Filtering}, the goal is to recommend items to a user based on the preferences of other similar users.
+
+The \textbf{Pearson Correlation Coefficient} is a statistical measure used to determine \textbf{how similarly two users rate items}, while correcting for differences in rating habits.
+
+For example:
+\begin{itemize}
+\item User A tends to give high scores to everything.
+\item User B tends to give lower scores overall.
+\end{itemize}
+
+Even if their raw ratings are different, Pearson checks whether they like and dislike the \textbf{same kinds of items} relative to their own averages.
+
+\subsubsection*{Intuition}
+Pearson answers this question:
+
+``When User A rates something above their normal average, does User B also rate it above their average?''
+
+If yes $\rightarrow$ strong positive similarity.
+
+\subsubsection*{Formula}
+\[
+r=\frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}
+\]
+Where:
+\begin{itemize}
+\item $(x_i)$ = ratings from User X
+\item $(y_i)$ = ratings from User Y
+\item $(\bar{x})$ = average rating of User X
+\item $(\bar{y})$ = average rating of User Y
+\end{itemize}
+
+\subsubsection*{Output Range}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Value & Meaning \\
+\hline
++1 & Perfect positive similarity \\
+0 & No relationship \\
+-1 & Opposite preferences \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Example}
+Suppose two users rated the same movies:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Movie & User A & User B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Step 1 --- Compute Average Ratings}
+User A average:
+\[
+\bar{x}=\frac{5+4+1+2}{4}=3
+\]
+User B average:
+\[
+\bar{y}=\frac{4+3+2+1}{4}=2.5
+\]
+
+\paragraph{Step 2 --- Center Ratings Around Their Mean}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Movie & A & A-Avg & B & B-Avg \\
+\hline
+Avengers & 5 & 2 & 4 & 1.5 \\
+Batman & 4 & 1 & 3 & 0.5 \\
+Titanic & 1 & -2 & 2 & -0.5 \\
+Joker & 2 & -1 & 1 & -1.5 \\
+\hline
+\end{tabular}
+\end{center}
+
+Notice:
+\begin{itemize}
+\item Both users rate superhero movies above average.
+\item Both rate darker/dramatic movies below average.
+\end{itemize}
+This indicates similar taste.
+
+\paragraph{Step 3 --- Compute Correlation}
+The numerator measures whether deviations move together:
+\[
+(2)(1.5)+(1)(0.5)+(-2)(-0.5)+(-1)(-1.5)
+\]
+Positive products indicate aligned preferences.
+
+The final result is close to:
+\[
+r\approx0.83
+\]
+This means:
+\begin{itemize}
+\item Strong positive similarity
+\item The users likely enjoy similar content
+\end{itemize}
+
+\subsubsection*{Why Pearson Is Useful}
+\paragraph{1. Handles Rating Bias} Some users always rate high. Pearson removes this bias by centering ratings around each user's average.
+
+\paragraph{2. Focuses on Preference Patterns} It does not care only about absolute values. Instead, it checks what users like more than usual and what users dislike more than usual.
+
+\subsubsection*{In Recommendation Systems}
+If User A is similar to User B, and User B liked a movie that User A has not seen, recommend that movie to User A. This is called \textbf{User-Based Collaborative Filtering}.
+
+\subsubsection*{Comparison with Cosine Similarity}
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Pearson & Cosine \\
+\hline
+Removes user bias & Uses raw ratings \\
+Focuses on rating trends & Focuses on vector direction \\
+Better when users rate differently & Simpler and faster \\
+\hline
+\end{tabular}
+\end{center}
+
+Example:
+\begin{itemize}
+\item Generous user vs strict user
+\item Pearson usually works better.
+\end{itemize}
+
+\subsubsection*{Weaknesses}
+\paragraph{Sparse Data Problem} If two users only rated 1 or 2 common items, similarity may be unreliable.
+
+\paragraph{Cold Start Problem} New users have few ratings, so correlation cannot be computed well.
+
+\subsubsection*{Real-World Usage}
+Pearson correlation has historically been used in movie recommendation engines, music recommendation platforms, e-commerce suggestions and streaming services. Modern systems often combine it with matrix factorization, embeddings and neural recommenders because those scale better for millions of users and items.
+
+\subsection{Euclidean Distance in Collaborative Filtering}
+\textbf{Euclidean Distance} measures how far apart two users (or items) are in rating space.
+
+It is the ordinary geometric distance you already know from 2D or 3D geometry, generalized to many dimensions.
+
+In recommendation systems:
+\begin{itemize}
+\item smaller distance $\rightarrow$ more similar users
+\item larger distance $\rightarrow$ less similar users
+\end{itemize}
+
+\subsubsection*{Core Idea}
+Imagine each user as a point in space.
+
+Example:
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Movie & User A & User B \\
+\hline
+Avengers & 5 & 4 \\
+Batman & 4 & 3 \\
+Titanic & 1 & 2 \\
+Joker & 2 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+Vectors:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+Euclidean distance measures the straight-line distance between these two points.
+
+\subsubsection*{Formula}
+\[
+d(A,B)=\sqrt{\sum_{i=1}^{n}(A_i-B_i)^2}
+\]
+Where:
+\begin{itemize}
+\item $(A_i)$ = rating from User A
+\item $(B_i)$ = rating from User B
+\item $(n)$ = number of common items
+\end{itemize}
+
+\subsubsection*{Step-by-Step Example}
+Using:
+\[
+A=[5,4,1,2]
+\]
+\[
+B=[4,3,2,1]
+\]
+
+\paragraph{Step 1 --- Compute Differences}
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+Movie & A & B & A-B \\
+\hline
+Avengers & 5 & 4 & 1 \\
+Batman & 4 & 3 & 1 \\
+Titanic & 1 & 2 & -1 \\
+Joker & 2 & 1 & 1 \\
+\hline
+\end{tabular}
+\end{center}
+
+\paragraph{Step 2 --- Square Differences}
+\[
+1^2+1^2+(-1)^2+1^2=4
+\]
+
+\paragraph{Step 3 --- Square Root}
+\[
+d(A,B)=\sqrt{4}=2
+\]
+The Euclidean distance is:
+\[
+2
+\]
+
+\subsubsection*{Interpretation}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+Distance & Meaning \\
+\hline
+0 & Identical ratings \\
+Small & Similar users \\
+Large & Different preferences \\
+\hline
+\end{tabular}
+\end{center}
+
+Unlike cosine similarity or Pearson correlation, Euclidean distance is a distance metric, not a similarity score.
+
+\subsubsection*{Converting Distance into Similarity}
+Recommendation systems often convert distance into similarity:
+\[
+similarity=\frac{1}{1+d(A,B)}
+\]
+This produces values between:
+\[
+0 \rightarrow 1
+\]
+
+Example:
+\[
+\frac{1}{1+2}=0.33
+\]
+
+\subsubsection*{Geometric Interpretation}
+In 2D:
+\[
+distance = \sqrt{(x_2-x_1)^2+(y_2-y_1)^2}
+\]
+Euclidean distance extends this concept into higher dimensions.
+
+If users rate 100 movies:
+\begin{itemize}
+\item each movie becomes one dimension
+\item users become points in 100-dimensional space
+\end{itemize}
+
+\subsubsection*{Advantages}
+\paragraph{1. Easy to Understand} Very intuitive mathematically.
+
+\paragraph{2. Simple Computation} Efficient for small systems.
+
+\paragraph{3. Captures Absolute Differences} If users rate very differently, the distance increases clearly.
+
+\subsubsection*{Weaknesses}
+\paragraph{1. Sensitive to Rating Scale} If both users like the same things relatively, Euclidean distance can still become large because raw values differ. Pearson handles this better.
+
+\paragraph{2. Sparse Data Problems} Most users rate only a few items. Missing values make distance calculations difficult.
+
+\paragraph{3. High-Dimensional Problems} In very large spaces, distances become less meaningful and many points appear similarly far apart. This is called the \textbf{Curse of Dimensionality}.
+
+\subsubsection*{Comparison with Pearson and Cosine}
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+Method & Measures & Handles Rating Bias? \\
+\hline
+Euclidean Distance & Absolute geometric distance & No \\
+Cosine Similarity & Angle between vectors & No \\
+Pearson Correlation & Relationship after centering & Yes \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection*{Practical Recommendation}
+Use Euclidean Distance when data is normalized, rating scales are consistent and the system is small or simple.
+
+Use Pearson when users have different rating habits and bias correction matters.
+
+Use Cosine when working with sparse vectors, embeddings or large-scale vector systems.
+
+\subsubsection*{Real-World Usage}
+Euclidean distance appears in K-Nearest Neighbors (KNN), clustering algorithms, anomaly detection, recommendation prototypes, computer vision and machine learning feature spaces.
+
+However, in modern large-scale recommenders, cosine similarity, matrix factorization and neural embeddings are generally preferred because they scale better and work better with sparse high-dimensional data.
+
+\section{Core Technical Challenges}
+\begin{itemize}
+\item \textbf{The Cold-Start Problem:} New users and newly released digital content lack historical interaction data, severely limiting the effectiveness of both collaborative and content-based approaches.
+\item \textbf{Data Sparsity:} On platforms with vast entertainment catalogs, the ratio of user interactions to total available content is extremely low, making it difficult to find reliable similarities between users or items.
+\item \textbf{Scalability and Real-Time Processing:} Digital entertainment platforms require the continuous streaming and processing of user telemetry. Calculating recommendations for millions of active users in real-time strains computational resources.
 \end{itemize}
 
 \bibliographystyle{ieeetr}

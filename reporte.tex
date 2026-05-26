@@ -569,6 +569,39 @@ Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefi
 \item \textbf{Escalabilidad y procesamiento en tiempo real:} Las plataformas de entretenimiento digital requieren la transmisión y el procesamiento continuos de la telemetría de los usuarios. Calcular recomendaciones para millones de usuarios activos en tiempo real exige demasiado los recursos computacionales.
 \end{itemize}
 
+\subsection{Problema de arranque en frío}
+El \textbf{problema de arranque en frío} (\emph{cold-start problem}) es uno de los retos más críticos en los sistemas de recomendación, porque aparece cuando no existe suficiente información histórica para hacer predicciones precisas \cite{Wang_Xu_Li_Li_2025}.
+
+Este problema suele manifestarse de dos formas. Por un lado, cuando un usuario es nuevo, no hay suficientes interacciones previas para estimar sus preferencias. Por otro lado, cuando un ítem acaba de publicarse, tampoco existen valoraciones o registros de uso que permitan compararlo con otros elementos \cite{Wang_Xu_Li_Li_2025}.
+
+\subsubsection{Impacto en los algoritmos tradicionales}
+\textbf{Filtrado colaborativo:} estos métodos dependen casi por completo de interacciones previas, como calificaciones, compras o reproducciones \cite{Wang_Xu_Li_Li_2025}. Cuando faltan datos en la matriz de calificaciones, el sistema no puede identificar usuarios similares ni patrones de consumo, lo que reduce su capacidad de recomendación.
+
+\textbf{Filtrado basado en contenido:} aunque este enfoque utiliza las propiedades de los ítems, también presenta limitaciones si no logra capturar relaciones profundas entre las características de los productos \cite{Wang_Xu_Li_Li_2025}.
+
+\subsubsection{Estrategias propuestas para mitigarlo}
+Las fuentes coinciden en que los \textbf{enfoques híbridos} son una de las mejores alternativas para superar estas limitaciones, ya que combinan las ventajas del filtrado colaborativo y del filtrado basado en contenido \cite{Wang_Xu_Li_Li_2025}.
+
+\textbf{Uso de incrustaciones de características:} una propuesta innovadora consiste en aplicar \emph{Word2Vec} a las características de los ítems, tratándolas como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}. Esto permite obtener el método RELFsim, que calcula la similitud entre productos a partir de sus atributos inherentes y permite recomendar contenido nuevo incluso cuando todavía no ha recibido calificaciones \cite{DBLP:journals/corr/abs-2005-08148}.
+
+\textbf{Estrategias híbridas ponderadas y en cascada:} algunos métodos integran el filtrado basado en contenido para extraer vectores de características y el filtrado colaborativo para calcular similitudes entre usuarios \cite{Wang_Xu_Li_Li_2025}. Al combinar ambos enfoques mediante ponderación, se reduce tanto el arranque en frío del usuario como el del ítem.
+
+\textbf{Agrupamiento:} el análisis de conglomerados ayuda a estructurar el comportamiento histórico disponible y mejora la precisión cuando la información es escasa \cite{Wang_Xu_Li_Li_2025}.
+
+\subsubsection{RELFsim}
+El método \textbf{RELFsim} es un algoritmo de recomendación basado en contenido que usa técnicas de procesamiento de lenguaje natural para medir la similitud entre productos a partir de sus características \cite{DBLP:journals/corr/abs-2005-08148}.
+
+Su funcionamiento puede resumirse así:
+\begin{itemize}
+\item Las características de los ítems, como género, actores o etiquetas, se tratan como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}.
+\item Al procesar esas secuencias de características, el sistema genera incrustaciones neuronales de características \cite{DBLP:journals/corr/abs-2005-08148}.
+\item Esos vectores capturan relaciones implícitas entre las propiedades de los productos y permiten calcular qué tan relacionadas están las características entre sí, más allá de si son idénticas \cite{DBLP:journals/corr/abs-2005-08148}.
+\item A partir de esas relaciones, el método construye una representación vectorial para cada ítem \cite{DBLP:journals/corr/abs-2005-08148}.
+\item Finalmente, la similitud entre dos ítems se obtiene comparando esas representaciones, y a ese cálculo se le denomina RELFsim \cite{DBLP:journals/corr/abs-2005-08148}.
+\end{itemize}
+
+Este enfoque resulta útil porque mantiene una precisión comparable a la del filtrado colaborativo puro y, al mismo tiempo, ayuda a resolver el problema del arranque en frío al recomendar contenido nuevo sin depender de interacciones históricas previas \cite{DBLP:journals/corr/abs-2005-08148,Wang_Xu_Li_Li_2025}.
+
 \bibliographystyle{ieeetr}
 \bibliography{bibliografia}
 

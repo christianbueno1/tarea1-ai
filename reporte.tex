@@ -5,6 +5,7 @@
 \usepackage{svg}
 \usepackage{array}
 \usepackage{amsmath}
+\usepackage{adjustbox}
 \usepackage{xurl}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
@@ -600,10 +601,6 @@ La implementación de estas soluciones de IA tiene un impacto directo en la oper
 	\item \textbf{Empresas y dueños de sistemas:} Mejoran la retención de clientes, la lealtad a la marca y la monetización del catálogo, al poder promocionar contenido nuevo de manera efectiva \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
 \end{itemize}
 
-
-
-\subsection{Escasez de Datos (\textit{Data Sparsity})}
-
 \subsubsection{Descripción de la solución del problema}
 La solución implementada para resolver el \textbf{problema del inicio en frío} (\emph{cold-start}) se basa en la creación de \textbf{sistemas de recomendación híbridos} que utilizan Inteligencia Artificial para extraer conocimiento profundo de los datos, incluso cuando las interacciones de los usuarios son inexistentes o escasas \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
 
@@ -617,19 +614,12 @@ Entiendo que la solución actúa como un "traductor" de características. Si un 
 La técnica principal utiliza el algoritmo \textbf{Word2Vec} de una manera innovadora. Tradicionalmente, Word2Vec relaciona palabras en oraciones; aquí, se utiliza para tratar las \textbf{características de los ítems como palabras} y generar \textbf{incrustaciones de características neuronales} (neural feature embeddings) \cite{DBLP:journals/corr/abs-2005-08148}.
 
 Diagrama del flujo de la solución (Arquitectura RELFsim):
-\begin{verbatim}
-[ Metadatos del Ítem ] ---> [ Pre-procesamiento ] ---> [ Modelo Word2Vec ]
-(Género, Tags, Actores)      (Tratar como oraciones)    (Entrenamiento de Embeddings)
-																			 |
-																			 v
-[ Cálculo de Similitud ] <--- [ Vectores de Características ] <--- [ RELFsim ]
-(RELFsim determina la           (Representación numérica        (Algoritmo de 
- relación entre ítems)           profunda del ítem)              IA propuesto)
-					|
-					v
-[ RECOMENDACIÓN FINAL ] <--- [ Integración Híbrida ] <--- [ Filtrado Colaborativo ]
-(Ítem nuevo sugerido al user) (Combina Contenido + Social)  (Basado en interacciones)
-\end{verbatim}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{assets/relfsim_hybrid_architecture.pdf}
+\caption{Arquitectura RELFsim para el sistema híbrido de recomendación.}
+\label{fig:relfsim-hybrid-architecture}
+\end{figure}
 
 \textbf{3. Técnicas de IA y Diseño de la Arquitectura}
 La arquitectura se diseña bajo un enfoque \textbf{híbrido} que combina lo mejor de dos mundos:
@@ -640,6 +630,45 @@ La arquitectura se diseña bajo un enfoque \textbf{híbrido} que combina lo mejo
 	\item \textbf{Mitigación del cold-start:} Integrando RELFsim dentro de un sistema colaborativo basado en ítems, la arquitectura puede apoyarse totalmente en contenido cuando faltan interacciones, y migrar gradualmente a un balance híbrido cuando llegan datos \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
 \end{itemize}
 
+% agregar despues de esta linea
+% agregar despues de esta linea
+
+\subsubsection{Organizaciones en Ecuador interesadas en resolver el inicio en frío}
+
+En Ecuador, el interés por resolver el problema del inicio en frío (cold-start) es elevado debido a la rápida adopción de la IA: se estima que para 2025, el 40% de las empresas ecuatorianas utilizarán herramientas de automatización impulsadas por esta tecnología \cite{ekos-empresas-ia, tudatos-ecuador-ia}.
+
+\begin{enumerate}
+\item \textbf{Servicio Nacional de Contratación Pública (SERCOP)}
+
+Esta es la institución con el interés más crítico en aplicar sistemas de recomendación avanzados \cite{ia-explicable}.
+
+\textbf{Por qué:} Existe una investigación dedicada a implementar un sistema de recomendación para las licitaciones públicas del SERCOP que utilice IA Explicable (XAI) \cite{ia-explicable}. Resolver el inicio en frío es vital para garantizar que nuevos proveedores nacionales (que no tienen historial en el sistema) puedan ser recomendados de manera justa frente a proveedores extranjeros o antiguos, promoviendo la equidad y transparencia \cite{ia-explicable}.
+
+\item \textbf{Tusdatos}
+
+Esta organización ecuatoriana se especializa en la validación de identidad y antecedentes en tiempo real \cite{tudatos-ecuador-ia}.
+
+\textbf{Por qué:} Utilizan IA para agilizar el onboarding de usuarios y procesos de selección de personal \cite{tudatos-ecuador-ia}. El problema del inicio en frío les afecta cuando deben evaluar a personas o empresas nuevas sin un historial previo en bases de datos, requiriendo algoritmos que puedan generar perfiles de riesgo confiables de forma inmediata \cite{tudatos-ecuador-ia}.
+
+\item \textbf{Sector de Salud (Ej. Plan Vital)}
+
+Organizaciones de salud en el país están invirtiendo en tecnología para optimizar la atención al paciente \cite{ekos-empresas-ia}.
+
+\textbf{Por qué:} Empresas como Plan Vital buscan cerrar la brecha de accesibilidad mediante soluciones tecnológicas \cite{ekos-empresas-ia}. La IA permite personalizar servicios y diagnósticos médicos; resolver el inicio en frío permite que un nuevo paciente o un nuevo tratamiento sea integrado y recomendado correctamente por el sistema sin necesidad de acumular años de datos previos \cite{ekos-empresas-ia}.
+
+\item \textbf{Universidad de Guayaquil}
+
+\textbf{Por qué:} Investigadores de esta universidad han liderado el desarrollo de prototipos de IA Explicable aplicados a sistemas de recomendación en el contexto de la contratación pública en Ecuador \cite{ia-explicable}. Su interés es académico y técnico, buscando superar barreras como la falta de talento especializado en el país \cite{tudatos-ecuador-ia, ia-explicable}.
+\end{enumerate}
+
+\subsubsection{Interés en América Latina}
+En el resto de la región, el interés está liderado por grandes proveedores de infraestructura y servicios:
+
+\begin{itemize}
+\item \textbf{Amazon Web Services (AWS):} Ha realizado inversiones directas en México y Brasil para potenciar el crecimiento de la IA, lo que incluye mejorar la eficiencia de sus servicios de recomendación en la nube \cite{tudatos-ecuador-ia}.
+\item \textbf{Plataformas de Entretenimiento:} Empresas como Spotify y Netflix son pioneras en el uso de cuestionarios iniciales durante el registro para que sus sistemas capturen preferencias básicas y eviten que el usuario nuevo reciba recomendaciones genéricas \cite{freecodecamp-cold-start-problem}.
+\end{itemize}
+\subsection{Escasez de Datos (\textit{Data Sparsity})}
 \begin{itemize}
 
 	\item \textbf{Descripcion del problema resuelto:} El problema especifico analizado en este punto es la escasez de datos (\textit{Data Spartsity}), una limitacion critica que llega a afectar la eficacia y rendimiento de los sistemas de recomendacion basados en filtrado colaborativo puro \cite{DBLP:journals/corr/abs-2005-08148}. Estos algoritmos se basan en las interacciones de los usuarios, para asi generar una matriz de clasificaciones identificando las preferencias de los usuarios \cite{DBLP:journals/corr/abs-2005-08148}, el problema es que cuando existen muy pocas interacciones el metodo tradicional empieza a fallar y no encuentra recomendaciones apropiadas, este problema sucede con usuarios mas recientes \cite{DBLP:journals/corr/abs-2005-08148}.

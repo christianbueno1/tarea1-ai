@@ -3,6 +3,9 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{svg}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{xurl}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -370,7 +373,7 @@ Si el usuario A es similar al usuario B y al usuario B le gustó una película q
 
 \subsubsection*{Comparación con la similitud del coseno}
 \begin{center}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.7cm}|>{\raggedright\arraybackslash}p{5.7cm}|}
 \hline
 Pearson & Coseno \\
 \hline
@@ -468,9 +471,9 @@ Joker & 2 & 1 & 1 \\
 \end{center}
 
 \paragraph{Paso 2 --- Elevar al cuadrado las diferencias}
-\[
-1^2+1^2+(-1)^2+1^2=4
-\]
+\begin{align*}
+1^2 + 1^2 + (-1)^2 + 1^2 &= 4
+\end{align*}
 
 \paragraph{Paso 3 --- Raíz cuadrada}
 \[
@@ -540,7 +543,7 @@ Si los usuarios califican 100 películas:
 
 \subsubsection*{Comparación con Pearson y el coseno}
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|}
 \hline
 Método & Mide & ¿Maneja el sesgo de calificación? \\
 \hline
@@ -552,7 +555,8 @@ Correlación de Pearson & Relación después de centrar & Sí \\
 \end{center}
 
 \subsubsection*{Recomendación práctica}
-Usa la distancia euclidiana cuando los datos estén normalizados, las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
+Usa la distancia euclidiana cuando los datos estén normalizados.
+También conviene cuando las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
 
 Usa Pearson cuando los usuarios tengan distintos hábitos de calificación y la corrección del sesgo sea importante.
 

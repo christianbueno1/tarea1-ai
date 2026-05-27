@@ -3,9 +3,14 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{svg}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{xurl}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{url}
 
 \setlength{\parindent}{0pt}
 
@@ -369,7 +374,7 @@ Si el usuario A es similar al usuario B y al usuario B le gustó una película q
 
 \subsubsection*{Comparación con la similitud del coseno}
 \begin{center}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.7cm}|>{\raggedright\arraybackslash}p{5.7cm}|}
 \hline
 Pearson & Coseno \\
 \hline
@@ -467,9 +472,9 @@ Joker & 2 & 1 & 1 \\
 \end{center}
 
 \paragraph{Paso 2 --- Elevar al cuadrado las diferencias}
-\[
-1^2+1^2+(-1)^2+1^2=4
-\]
+\begin{align*}
+1^2 + 1^2 + (-1)^2 + 1^2 &= 4
+\end{align*}
 
 \paragraph{Paso 3 --- Raíz cuadrada}
 \[
@@ -539,7 +544,7 @@ Si los usuarios califican 100 películas:
 
 \subsubsection*{Comparación con Pearson y el coseno}
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|}
 \hline
 Método & Mide & ¿Maneja el sesgo de calificación? \\
 \hline
@@ -551,7 +556,8 @@ Correlación de Pearson & Relación después de centrar & Sí \\
 \end{center}
 
 \subsubsection*{Recomendación práctica}
-Usa la distancia euclidiana cuando los datos estén normalizados, las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
+Usa la distancia euclidiana cuando los datos estén normalizados.
+También conviene cuando las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
 
 Usa Pearson cuando los usuarios tengan distintos hábitos de calificación y la corrección del sesgo sea importante.
 
@@ -566,10 +572,202 @@ Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefi
 \begin{itemize}
 \item \textbf{Problema de arranque en frío:} Los usuarios nuevos y el contenido digital recién publicado carecen de datos históricos de interacción, lo que limita severamente la eficacia de los enfoques colaborativos y basados en contenido.
 \item \textbf{Dispersión de datos:} En plataformas con enormes catálogos de entretenimiento, la proporción de interacciones de usuarios frente al contenido total disponible es extremadamente baja, lo que dificulta encontrar similitudes confiables entre usuarios o elementos.
-\item \textbf{Escalabilidad y procesamiento en tiempo real:} Las plataformas de entretenimiento digital requieren la transmisión y el procesamiento continuos de la telemetría de los usuarios. Calcular recomendaciones para millones de usuarios activos en tiempo real exige demasiado los recursos computacionales.
+\item \textbf{Deriva de concepto:} Los gustos de los usuarios y las tendencias de entretenimiento evolucionan con el tiempo, lo que puede hacer que los modelos de recomendación se vuelvan obsoletos si no se actualizan continuamente.
 \end{itemize}
+
+\subsection{Problema de arranque en frío}
+El \textbf{problema del inicio en frío} (\emph{cold-start problem}) es uno de los desafíos más críticos identificados en el desarrollo de sistemas de recomendación modernos, y su resolución mediante técnicas de Inteligencia Artificial ha transformado la eficiencia de las plataformas digitales.
+
+\subsubsection{Descripción del problema: El inicio en frío (Cold-Start)}
+El problema específico analizado es la \textbf{incapacidad de los sistemas de recomendación para generar inferencias precisas debido a la falta o insuficiencia de datos históricos} \cite{freecodecamp-cold-start-problem}. Este fenómeno ocurre principalmente en dos situaciones:
+\begin{itemize}
+	\item \textbf{Inicio en frío del usuario:} Se presenta cuando un nuevo usuario se registra en una plataforma y el sistema no posee un historial de sus preferencias, compras o calificaciones previas para ofrecerle contenido relevante \cite{freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Inicio en frío del ítem:} Ocurre cuando se añade contenido nuevo (por ejemplo, un videojuego en una plataforma o una película en un servicio de streaming) que aún no ha recibido interacciones o evaluaciones. Al no haber señales sociales, los algoritmos tradicionales de filtrado colaborativo no pueden recomendar este producto \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+\end{itemize}
+
+Este vacío de información genera una "matriz de calificaciones" escasamente poblada que deja al sistema incapaz de funcionar correctamente en las etapas iniciales \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+
+\subsubsection{Impacto de la solución}
+La implementación de estas soluciones de IA tiene un impacto directo en la operatividad de los sistemas:
+\begin{itemize}
+	\item \textbf{Mejora de la precisión y diversidad:} El sistema puede ofrecer recomendaciones útiles desde el primer día, manteniendo precisión y diversidad incluso en catálogos extensos \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Reducción del abandono (Churn Rate):} Al proporcionar recomendaciones relevantes de manera inmediata, se disminuye la probabilidad de que nuevos usuarios abandonen la plataforma por falta de descubrimiento \cite{freecodecamp-cold-start-problem}.
+	\item \textbf{Mitigación de la sobrecarga de información:} Los algoritmos orientados por embeddings y similitud ayudan a guiar al usuario entre miles de opciones, mejorando la experiencia de descubrimiento \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Quién se beneficia de la solución}
+\begin{itemize}
+	\item \textbf{Los usuarios:} Reciben una experiencia personalizada y satisfactoria desde el primer contacto con la plataforma, ahorrando tiempo y esfuerzo en la búsqueda de contenido \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+	\item \textbf{Empresas y dueños de sistemas:} Mejoran la retención de clientes, la lealtad a la marca y la monetización del catálogo, al poder promocionar contenido nuevo de manera efectiva \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Descripción de la solución del problema}
+La solución implementada para resolver el \textbf{problema del inicio en frío} (\emph{cold-start}) se basa en la creación de \textbf{sistemas de recomendación híbridos} que utilizan Inteligencia Artificial para extraer conocimiento profundo de los datos, incluso cuando las interacciones de los usuarios son inexistentes o escasas \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+
+\textbf{1. Descripción de la solución}
+La solución consiste en integrar técnicas de \textbf{procesamiento de lenguaje natural (NLP)} y \textbf{modelos neuronales} para que el sistema no dependa únicamente de las calificaciones históricas. En lugar de esperar a que un usuario califique un producto, la IA analiza los metadatos (género, descripción, etiquetas) para entender qué es el producto y a qué otros ítems se parece semánticamente \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+
+\textbf{Mi entendimiento de la solución:}
+Entiendo que la solución actúa como un "traductor" de características. Si un juego es nuevo y no tiene reseñas, la IA "lee" sus etiquetas y, mediante vectores matemáticos, determina que es similar a otros juegos exitosos. De este modo, el sistema puede recomendarlo de inmediato a usuarios con gustos afines, eliminando el periodo de invisibilidad del nuevo contenido.
+
+\textbf{2. La solución que utiliza IA: RELFsim y Word2Vec}
+La técnica principal utiliza el algoritmo \textbf{Word2Vec} de una manera innovadora. Tradicionalmente, Word2Vec relaciona palabras en oraciones; aquí, se utiliza para tratar las \textbf{características de los ítems como palabras} y generar \textbf{incrustaciones de características neuronales} (neural feature embeddings) \cite{DBLP:journals/corr/abs-2005-08148}.
+
+Diagrama del flujo de la solución (Arquitectura RELFsim):
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{assets/relfsim_hybrid_architecture.pdf}
+\caption{Arquitectura RELFsim para el sistema híbrido de recomendación.}
+\label{fig:relfsim-hybrid-architecture}
+\end{figure}
+
+\textbf{3. Técnicas de IA y Diseño de la Arquitectura}
+La arquitectura se diseña bajo un enfoque \textbf{híbrido} que combina lo mejor de dos mundos:
+\begin{itemize}
+	\item \textbf{Incrustaciones Neuronales (Word2Vec):} Capturan relaciones implícitas entre características, por ejemplo relaciones semánticas entre etiquetas que no son idénticas pero están relacionadas \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Algoritmo RELFsim:} Utiliza las incrustaciones para construir representaciones vectoriales de los productos; consigue una precisión comparable al filtrado colaborativo usando solo datos de contenido \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Estrategia Híbrida Ponderada:} Combina clustering del comportamiento de usuario con vectores de contenido mediante ponderaciones adaptativas, de modo que el componente colaborativo gana peso conforme se acumulan interacciones \cite{Wang_Xu_Li_Li_2025}.
+	\item \textbf{Mitigación del cold-start:} Integrando RELFsim dentro de un sistema colaborativo basado en ítems, la arquitectura puede apoyarse totalmente en contenido cuando faltan interacciones, y migrar gradualmente a un balance híbrido cuando llegan datos \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+\end{itemize}
+
+% agregar despues de esta linea
+% agregar despues de esta linea
+
+\subsubsection{Organizaciones en Ecuador interesadas en resolver el inicio en frío}
+
+En Ecuador, el interés por resolver el problema del inicio en frío (cold-start) es elevado debido a la rápida adopción de la IA: se estima que para 2025, el 40% de las empresas ecuatorianas utilizarán herramientas de automatización impulsadas por esta tecnología \cite{ekos-empresas-ia, tudatos-ecuador-ia}.
+
+\begin{enumerate}
+\item \textbf{Servicio Nacional de Contratación Pública (SERCOP)}
+
+Esta es la institución con el interés más crítico en aplicar sistemas de recomendación avanzados \cite{ia-explicable}.
+
+\textbf{Por qué:} Existe una investigación dedicada a implementar un sistema de recomendación para las licitaciones públicas del SERCOP que utilice IA Explicable (XAI) \cite{ia-explicable}. Resolver el inicio en frío es vital para garantizar que nuevos proveedores nacionales (que no tienen historial en el sistema) puedan ser recomendados de manera justa frente a proveedores extranjeros o antiguos, promoviendo la equidad y transparencia \cite{ia-explicable}.
+
+\item \textbf{Tusdatos}
+
+Esta organización ecuatoriana se especializa en la validación de identidad y antecedentes en tiempo real \cite{tudatos-ecuador-ia}.
+
+\textbf{Por qué:} Utilizan IA para agilizar el onboarding de usuarios y procesos de selección de personal \cite{tudatos-ecuador-ia}. El problema del inicio en frío les afecta cuando deben evaluar a personas o empresas nuevas sin un historial previo en bases de datos, requiriendo algoritmos que puedan generar perfiles de riesgo confiables de forma inmediata \cite{tudatos-ecuador-ia}.
+
+\item \textbf{Sector de Salud (Ej. Plan Vital)}
+
+Organizaciones de salud en el país están invirtiendo en tecnología para optimizar la atención al paciente \cite{ekos-empresas-ia}.
+
+\textbf{Por qué:} Empresas como Plan Vital buscan cerrar la brecha de accesibilidad mediante soluciones tecnológicas \cite{ekos-empresas-ia}. La IA permite personalizar servicios y diagnósticos médicos; resolver el inicio en frío permite que un nuevo paciente o un nuevo tratamiento sea integrado y recomendado correctamente por el sistema sin necesidad de acumular años de datos previos \cite{ekos-empresas-ia}.
+
+\item \textbf{Universidad de Guayaquil}
+
+\textbf{Por qué:} Investigadores de esta universidad han liderado el desarrollo de prototipos de IA Explicable aplicados a sistemas de recomendación en el contexto de la contratación pública en Ecuador \cite{ia-explicable}. Su interés es académico y técnico, buscando superar barreras como la falta de talento especializado en el país \cite{tudatos-ecuador-ia, ia-explicable}.
+\end{enumerate}
+
+\subsubsection{Interés en América Latina}
+En el resto de la región, el interés está liderado por grandes proveedores de infraestructura y servicios:
+
+\begin{itemize}
+\item \textbf{Amazon Web Services (AWS):} Ha realizado inversiones directas en México y Brasil para potenciar el crecimiento de la IA, lo que incluye mejorar la eficiencia de sus servicios de recomendación en la nube \cite{tudatos-ecuador-ia}.
+\item \textbf{Plataformas de Entretenimiento:} Empresas como Spotify y Netflix son pioneras en el uso de cuestionarios iniciales durante el registro para que sus sistemas capturen preferencias básicas y eviten que el usuario nuevo reciba recomendaciones genéricas \cite{freecodecamp-cold-start-problem}.
+\end{itemize}
+
+\subsection{Escasez de Datos (\textit{Data Sparsity})}
+\begin{itemize}
+
+	\item \textbf{Descripcion del problema resuelto:} El problema especifico analizado en este punto es la escasez de datos (\textit{Data Spartsity}), una limitacion critica que llega a afectar la eficacia y rendimiento de los sistemas de recomendacion basados en filtrado colaborativo puro \cite{DBLP:journals/corr/abs-2005-08148}. Estos algoritmos se basan en las interacciones de los usuarios, para asi generar una matriz de clasificaciones identificando las preferencias de los usuarios \cite{DBLP:journals/corr/abs-2005-08148}, el problema es que cuando existen muy pocas interacciones el metodo tradicional empieza a fallar y no encuentra recomendaciones apropiadas, este problema sucede con usuarios mas recientes \cite{DBLP:journals/corr/abs-2005-08148}.
+
+	\item \textbf{Tecnicas de Ia utilizadaso:} La solucion emplea \textit{Word2Vec} que es un conjunto de modelos y tecnicas de arquitecturas las cuales provienen del dominio de Procesamiento de Lenguaje Natural (NLP). Especificamente, se utiliza una red nuronal de dos capas bajo la arquitectura \textit{Skip-gram} la cual se encarga de predecir el contexto de una palabra dada \cite{DBLP:journals/corr/abs-2005-08148}. Este es un enfoque novedoso  en el cual la IA utiliza las caracteristicas de contenido de una pelicula (directores, guionistas y el elenco de actores) procesandolas como si estas fueran palabras dentro de una oracion \cite{DBLP:journals/corr/abs-2005-08148}. A traves del entrenamiento, la red neuronal llega a generar reprensentaciones vectoriales distribuidas (\textit{embeddings}) que logran capturar relaciones matematicas entre las caracteristicas de los actores o directores que han trabajado en contextos similares \cite{DBLP:journals/corr/abs-2005-08148}.
+
+	\item \textbf{Impacto de la solucion:} El impacto principal de esta solucion es que el sistema logro adquirir la capacidad de predecir las calificaciones para aquellos articulos que enfrentan una severa ecasez de datos, es decir aquellos articulos que no han sido calificados por los usuarios o que han sido calificados por muy pocos usuarios \cite{DBLP:journals/corr/abs-2005-08148}. Al utilizar este predictor basado en contenido (RELFsim) como respaldo del filtrado colaborativo, lo cula ayudo a mejorar la precision  global del sistema de recomendacion, como resultado directo el modelo hibrido logra un mejor margen de error de prediccion, lo cual se evidencia en la evaluacion de las metricas RMSE y MAE \cite{DBLP:journals/corr/abs-2005-08148}.
+
+	\item \textbf{Quien se beneficia:} Los usuarios finales los cuales son los mayores beneficiarios de esta solucion ya que ahora el sistema logra proporcionar una pequela propoorcion de articulos que se adaptan adecuadamente a sus preferencias y gustos personalizados \cite{DBLP:journals/corr/abs-2005-08148}. Ademas, desde una perspectiva comercial los beneficiarios incluyen tanto a las empresas como a los propietarios de los sistemas de recomendacion, estos mismos son quienes se encargan de desplegar algoritmos sofisticados para ayudar a sus clientes a lidiar con los problemas derivados de la sobrecarga de informacion \cite{DBLP:journals/corr/abs-2005-08148}.
+
+\end{itemize}
+
+\subsubsection{Descripcion de la solucion del problema (Escasez de Datos)}
+\textbf{Comprension de la solucion implementada: }
+\begin{itemize}
+	\item En un escenario de escasez de datos (\textit{Data Sparsity}), la matriz tradicional que cruza o relaciona a los usuarios con sus calificaciones carece de la informacion suficiente o adecuada para generar recomendaciones precisas  \cite{DBLP:journals/corr/abs-2005-08148}. Esta solucion se encarga de crear un respaldo inteligente para el filtrado colaborativo por medio de un sistema, los autores de este articuko intrudujeron un nuevo metodo novedoso para extraer la relacion implicita entre las caracteristicas de los articulos utilizando herramientas de inteligencia artificial como Word2Vec \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item Si el recomendador que se usaba principalmente se encontraba con un articulo que no tiene suficientes datos de calificacion, el sistema verifica esta carencia e invoca una solucion alternativa para poder predecir la calificacion, la cual esta basada en lo que la IA ha logrado aprender sobre las caracteristicas de la pelicula \cite{DBLP:journals/corr/abs-2005-08148}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{assets/skipgram_architecture.png}
+	\caption{Diagrama de la arquitectura de red neuronal Skip-gram utilizada para generar embedding de las caracteristicas del contenido.}
+	\label {fig:skipgram}
+\end{figure}
+
+\textbf{Tecnicas de IA, arquitectura y diseño: }
+En cuanto al diseño utilizado para esta solucion, se implemento una arquitectura de red neuronal de dos capas bajo el modelo Skip-gram para poder resolver la escasez de datos, para ello se compone de las siguientes tecnicas y procesos arquitectonicos:
+\begin{itemize}
+	\item \textbf{Red Neuronal Skip-gram (Word2VVec):} La IA en este caso emplea arquitecturas de modelos Word2Vec, las cuales usan redes neuronales de dos capas para calcular representaciones vectoriales, especificacmente se utiliza la arquitectura \textit(Skip-gram), que no usa procesamiento de lenguaje natural, sino que utiliza las caracteristicas de los articulos como si fueran palabras de una oracion \cite{DBLP:journals/corr/abs-2005-08148}. Dada una "palabra" (caracteristica), el modelo IA se encargara de predecir el contexto (otras caracteristicas relacionadas) o "palabras" circundantes \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Resprensentaciones Vectoriales (Embeddings):} A traves del proceso de entrenamiento de la red neuronal, la capa oculta del modelo llega a generar un conjunto de vectores, los cuales llegan a ser las representaciones vectoriales aprendidas por la IA para caada caracteristica que haya sido ingresada \cite{DBLP:journals/corr/abs-2005-08148}. Esto permite que se capturen relaciones semanticas precisas de alta calidad entre las caracteristicas, por ejemplo, el modelo puede aprender acerca de los directoores que tienen caracteristicas comunes o que han trabajado en peliculas similares \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Predictor basado en contenido (RELFsim): } Para obtener una representacion vectorial global de una pelicula, la arquitectura toma el promedio que obtenido de los vectores de las caracteristicas individuales que lo conforman (palabras) \cite{DBLP:journals/corr/abs-2005-08148}. Luego se procede a calcular la similitud entre las dos peliculas utilizando la similitud del coseno entre sus representaciones vectoriales, a este calculo se le denomina RELFsim \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Hibridacion Estructural condicional: } El diseño del sistema se basa en priorizar el filtrado colaborativo puro, pero cuando este se encuentra con articulo sin  suficientes datos de clasificacion, en el paso donde se debe calcular la similitud entre un articulo y los otros verifica si hay suficientes calificaciones, si no las hay o en el caso de que existan muy pocas, el sistema invoca el predictor basado en contenido RELFsim para asi generar un recomendacion o prediccion alternativa \cite{DBLP:journals/corr/abs-2005-08148}.
+\end{itemize}
+
+\end{itemize}
+
+\subsubsection{Organizaciones interesadas en resolver el problema (Ecuador)}
+En el documento o articulo analizado se propone una solucion al problema de la escasez de datos (\textit{Data Sparsity}) mediante el uso de representaciones vectoriales (Word2Vec) de las caracteristicas del contenido, lo cual permite generar las recomendaciones precisas incluso cuando los usuarios nohan interactuado con el sistema o calificado los productos de manera masiva. Por lo tanto, este es un problema general que ocurre en diferentes partes del mundo, dentro del contexto de Ecuador, existen varias organizaciones con catalogos dinamicos que sufren de la falta de retroalimentacion o calificaciones por parte de los usuarios. A continuacion se presentan algunas de las organizaciones que pueden beneficiarse de esta solucion en el contexto de Ecuador:
+
+\begin{itemize}
+
+	\item \textbf{Xtrim (Antes grupo de TVCable): } Esta es una empresa que se encarga de ofrecer servicios de telecomunicaciones que han incursionado en plataformas de  entretenimiento o \textit{streaming} y \textit{Video on Demand} (VOD) \cite{anziano2021xtrim}, dado que esta empresa se encuentra en proceso de creciemiento se enrentan a un desafio de escasez de datos. A diferencia de otras plataformas de entretenimiento sus bases de usuarios activos son menores y rara vez dejan calificaciones sobre las peliculas o series consumidas. Implementar una solucion que se base en el analisis de caracteristicas tratadas como secuencias de palabras por medio de \textit{Skip-gram} puede ayudar a crear relaciones semanticas, asi llegando a recomendar un estreno a un usuario por que le han gustado peliculas con actores o directores similares en contenidos previamente vistos, mitigando asi el problema de la matriz de calificaciones vacia.
+	\item \textbf{Supercines (Corporacion El Rosado): } Esta es la cadena de cines mas grande del pais y cuenta con aplicaciones moviles y plataformas web para la compra de boletos \cite{appsupercines2026}. Supercines sufre de una escasez de datos extrema: Los clientes compran entradas a traves de la app, pero casi nunca entran al apartado de "calificar" la pelicula despues de verla con un ranking de 1 a 5 estrellas, al no tener una matriz de calificacionees densa, el filtrado colaborativo puro es ineficiente. Sin embargo, utilizando la solucion RELFsim basada en contenido, Supercines podria timar su base de datos de peliculas(actores, productores, franquicias) y crear un motor de recomendacion que envie correos promocionales o notificaciones \textit{push} a los clientes suguiriendo la compra de boletos en preventa para peliculas que compartan el mismo "contenido" con las peliculas que el usuario ha visto en el pasado.
+	\item \textbf{Almacenes De Prati (Comercio Electronico): } Esta es una cadena de tiendas por departamentos que cuenta con una plataforma de comercio electronico, aunque el estudio original se aplica a peliculas, la arquitectura transforma las caracteristicas de un articulo en un problema de Procesamiento de Lenguaje Natural (NLP) y por lo tanto esta puede ser adaptada a otros dominios o en otras palabras es extrapolable al {retail} y a las plataformas digitales de compras renovadas \cite{itahora2019deprati}. De Prati maneja miles de referencias de productos en su tienda en linea, dentro del comercio electronico de moda, la escasez de datos es un problema comun por que los productos cambian constantemente por temporada y muy pocos clientes dejan reseñas escritas o calificaciones. De prati podria tratar las caracteriticas de las prendas de ropa como la marca, el color, material o estilo como si fueran las palabras de una oracion, y de esta manera si el modelo matematico aprende que caracteristicas suelen comprase juntas, podrian sugerir con alta precision prendas nuevas a los usuarios.
+\end{itemize}
+
+\subsection{Deriva de concepto (\textit{Concept Drift})}
+
+\subsubsection{Descripción del problema resuelto}
+La deriva de concepto se refiere a la situación en la que las relaciones estadísticas entre las variables de entrada y la variable objetivo cambian con el tiempo. En el contexto de los sistemas de recomendación, esto puede ocurrir cuando los gustos de los usuarios evolucionan, aparecen nuevas tendencias o se introducen nuevos productos al mercado \cite{wanas2019detection}. La deriva de concepto puede afectar negativamente el rendimiento de los modelos de recomendación si no se detecta y maneja adecuadamente, ya que el modelo puede volverse obsoleto y generar recomendaciones irrelevantes \cite{wanas2019detection}.
+
+El impacto de la solución propuesta para manejar la deriva de concepto es significativo, ya que permite a los sistemas de recomendación adaptarse a los cambios en las preferencias de los usuarios y en el mercado. Al implementar técnicas de detección de deriva de concepto, como el monitoreo continuo del rendimiento del modelo y la actualización periódica de los datos de entrenamiento, se puede mejorar la precisión y relevancia de las recomendaciones generadas \cite{wanas2019detection}. 
+
+Los usuarios finales se benefician al recibir recomendaciones más personalizadas y actualizadas, lo que mejora su experiencia de usuario y aumenta la probabilidad de que encuentren productos o contenido que realmente les interese. Además, las empresas que implementan sistemas de recomendación efectivos pueden aumentar la satisfacción del cliente, la retención y las ventas \cite{wanas2019detection}.
+
+\subsubsection{Descripción de la solución}
+Para abordar esta problemática, se implementó el algoritmo \textbf{IKCD (Incremental Knowledge Concept Drift)}, un enfoque de aprendizaje continuo y no supervisado diseñado específicamente para flujos de datos (\textit{data streams}). A diferencia de los métodos tradicionales que descartan el conocimiento previo o dependen de costosos datos etiquetados manualmente, el algoritmo IKCD utiliza datos no etiquetados para construir el modelo y aprovecha el conocimiento histórico preservado para adaptarse a los nuevos conceptos.
+
+A nivel arquitectónico, la solución se estructura de forma modular y cíclica. A continuación, se presenta un diagrama del flujo operativo del sistema:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{assets/DiagramaIKCD.png}
+\caption{Flujo operativo de la arquitectura del algoritmo IKCD.}
+\label{fig:flujo_ikcd}
+\end{figure}
+
+Como se ilustra en el diagrama, el diseño del algoritmo IKCD se divide fundamentalmente en dos fases interdependientes: la fase de entrenamiento y la fase de aprendizaje adaptativo. La \textbf{Fase de Entrenamiento} procesa una ventana de datos combinada (datos nuevos más datos históricos). En esta etapa se extraen las características textuales relevantes y se aplica un algoritmo de agrupamiento para establecer ``centroides de referencia'', los cuales representan los temas base de las noticias. Una vez que el modelo está construido, el sistema entra en la \textbf{Fase de Aprendizaje Adaptativo}, la cual opera continuamente monitoreando el flujo de datos entrante a través de una ``ventana de detección''. El clasificador evalúa estos nuevos datos y compara sus centroides con los centroides de referencia del modelo. Si la distancia supera un umbral predefinido, el sistema dispara una alarma de \textit{drift} (deriva), lo que activa el proceso de ``Reforma'' para construir una nueva ventana de entrenamiento mezclando estratégicamente los conceptos antiguos (ej. 30\% al 40\%) y los nuevos (60\% al 70\%) para actualizar el modelo sin perder la memoria histórica.
+
+Para lograr esta autonomía, la solución integra de manera sinérgica varias técnicas de Inteligencia Artificial:
+
+\begin{itemize}
+    \item \textbf{Procesamiento de Lenguaje Natural (NLP):} Utiliza un etiquetador (\textit{Stanford Tagger}) para extraer únicamente los sustantivos de las noticias. Aplica un proceso de \textit{stemming} para obtener la raíz de las palabras. Finalmente, utiliza la Frecuencia de Término (\textit{Term Frequency - TF}) para seleccionar el 15\% de las características más importantes, logrando una reducción dimensional crítica.
+    \item \textbf{Agrupamiento No Supervisado mediante K-means:} Permite prescindir de datos etiquetados agrupando las noticias por similitud en $K$ clústeres de forma automática.
+    \item \textbf{Distancia del Coseno:} La detección del cambio de concepto se realiza mediante un cálculo de distancia geométrica. Esta métrica evalúa la distancia entre el centroide de los datos recientes y el centroide de referencia. Al ser altamente efectiva para datos textuales dispersos, permite al sistema tomar decisiones precisas sobre cuándo es estrictamente necesario reentrenar el modelo.
+\end{itemize}
+
+\subsubsection{Interés Organizacional y Aplicabilidad en el Mercado}
+
+En el contexto del ecosistema tecnológico ecuatoriano, las organizaciones enfocadas en el entretenimiento digital y la distribución de contenido audiovisual, tales como \textbf{El Canal del Fútbol (ECDF)} o \textbf{CNT Play}, presentan un potencial interés técnico en la resolución de la deriva de concepto (\textit{concept drift}). El modelo de negocio de estas plataformas depende estrictamente de la retención del usuario (tiempo de visualización) mediante recomendaciones precisas. Dado que las preferencias de los espectadores son volátiles y cambian según temporadas deportivas, eventos virales o evolución de gustos personales, la implementación de un algoritmo adaptativo permitiría mantener la relevancia del contenido sugerido sin requerir intervenciones manuales constantes sobre los perfiles de los usuarios.
+
+\subsubsection*{Barreras de Implementación Local}
+A pesar de las ventajas teóricas, es altamente probable que la mayoría de estas organizaciones en Ecuador \textbf{no tengan el interés de desarrollar internamente} este tipo de soluciones algorítmicas complejas desde cero. Las principales razones son:
+
+\begin{itemize}
+    \item \textbf{Altos costos de I+D:} Desarrollar, entrenar y mantener arquitecturas de aprendizaje automático no supervisado requiere una fuerte inversión en Investigación y Desarrollo, así como la contratación de perfiles altamente especializados en \textit{Machine Learning} e Inteligencia Artificial, lo cual suele escapar de los presupuestos operativos locales \cite{aws_personalize}.
+    \item \textbf{Dependencia de soluciones SaaS (Cajas Negras):} En lugar de programar algoritmos híbridos propios, las empresas locales tienden a preferir la integración de servicios gestionados en la nube (como \textit{AWS Personalize} o \textit{Google Cloud Recommendations AI}). Estas plataformas de terceros ya manejan la deriva de concepto de forma interna y opaca, transformando un problema de desarrollo de software en un simple gasto operativo mensual \cite{aws_personalize}.
+\end{itemize}
+
+\subsubsection*{Perspectiva en América Latina}
+Si se expande el análisis al mercado regional de América Latina, el interés corporativo en resolver algorítmicamente este problema de forma interna (\textit{in-house}) crece exponencialmente debido a las economías de escala. Organizaciones de streaming masivo como \textbf{Vix (TelevisaUnivision)} o \textbf{Globoplay (Brasil)} tienen un interés crítico en estas arquitecturas \cite{boeira_globo} \cite{vix_televisaunivision}. 
+
+Al competir directamente con conglomerados globales de entretenimiento, estas plataformas procesan el comportamiento de millones de usuarios simultáneos. Para ellas, depender de soluciones genéricas de terceros resulta inviable por los altos costos de facturación por API. Por lo tanto, desarrollar algoritmos híbridos eficientes (similares al IKCD) que manejen la deriva de concepto de forma automática representa una ventaja competitiva fundamental \cite{boeira_globo} \cite{vix_televisaunivision}.
+
+
 
 \bibliographystyle{ieeetr}
 \bibliography{bibliografia}
+
 
 \end{document}

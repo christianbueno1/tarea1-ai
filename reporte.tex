@@ -572,7 +572,7 @@ Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefi
 \begin{itemize}
 \item \textbf{Problema de arranque en frío:} Los usuarios nuevos y el contenido digital recién publicado carecen de datos históricos de interacción, lo que limita severamente la eficacia de los enfoques colaborativos y basados en contenido.
 \item \textbf{Dispersión de datos:} En plataformas con enormes catálogos de entretenimiento, la proporción de interacciones de usuarios frente al contenido total disponible es extremadamente baja, lo que dificulta encontrar similitudes confiables entre usuarios o elementos.
-\item \textbf{Escalabilidad y procesamiento en tiempo real:} Las plataformas de entretenimiento digital requieren la transmisión y el procesamiento continuos de la telemetría de los usuarios. Calcular recomendaciones para millones de usuarios activos en tiempo real exige demasiado los recursos computacionales.
+\item \textbf{Deriva de concepto:} Los gustos de los usuarios y las tendencias de entretenimiento evolucionan con el tiempo, lo que puede hacer que los modelos de recomendación se vuelvan obsoletos si no se actualizan continuamente.
 \end{itemize}
 
 \subsection{Problema de arranque en frío}
@@ -681,7 +681,7 @@ En el resto de la región, el interés está liderado por grandes proveedores de
 
 \end{itemize}
 
-\subsection{4. Descripcion de la solucion del problema (Escasez de Datos)}
+\subsubsection{Descripcion de la solucion del problema (Escasez de Datos)}
 \textbf{Comprension de la solucion implementada: }
 \begin{itemize}
 	\item En un escenario de escasez de datos (\textit{Data Sparsity}), la matriz tradicional que cruza o relaciona a los usuarios con sus calificaciones carece de la informacion suficiente o adecuada para generar recomendaciones precisas  \cite{DBLP:journals/corr/abs-2005-08148}. Esta solucion se encarga de crear un respaldo inteligente para el filtrado colaborativo por medio de un sistema, los autores de este articuko intrudujeron un nuevo metodo novedoso para extraer la relacion implicita entre las caracteristicas de los articulos utilizando herramientas de inteligencia artificial como Word2Vec \cite{DBLP:journals/corr/abs-2005-08148}.
@@ -705,7 +705,7 @@ En cuanto al diseño utilizado para esta solucion, se implemento una arquitectur
 
 \end{itemize}
 
-\subsection{5. Organizaciones interesadas en resolver el problema (Ecuador)}
+\subsubsection{Organizaciones interesadas en resolver el problema (Ecuador)}
 En el documento o articulo analizado se propone una solucion al problema de la escasez de datos (\textit{Data Sparsity}) mediante el uso de representaciones vectoriales (Word2Vec) de las caracteristicas del contenido, lo cual permite generar las recomendaciones precisas incluso cuando los usuarios nohan interactuado con el sistema o calificado los productos de manera masiva. Por lo tanto, este es un problema general que ocurre en diferentes partes del mundo, dentro del contexto de Ecuador, existen varias organizaciones con catalogos dinamicos que sufren de la falta de retroalimentacion o calificaciones por parte de los usuarios. A continuacion se presentan algunas de las organizaciones que pueden beneficiarse de esta solucion en el contexto de Ecuador:
 
 \begin{itemize}
@@ -715,8 +715,58 @@ En el documento o articulo analizado se propone una solucion al problema de la e
 	\item \textbf{Almacenes De Prati (Comercio Electronico): } Esta es una cadena de tiendas por departamentos que cuenta con una plataforma de comercio electronico, aunque el estudio original se aplica a peliculas, la arquitectura transforma las caracteristicas de un articulo en un problema de Procesamiento de Lenguaje Natural (NLP) y por lo tanto esta puede ser adaptada a otros dominios o en otras palabras es extrapolable al {retail} y a las plataformas digitales de compras renovadas \cite{itahora2019deprati}. De Prati maneja miles de referencias de productos en su tienda en linea, dentro del comercio electronico de moda, la escasez de datos es un problema comun por que los productos cambian constantemente por temporada y muy pocos clientes dejan reseñas escritas o calificaciones. De prati podria tratar las caracteriticas de las prendas de ropa como la marca, el color, material o estilo como si fueran las palabras de una oracion, y de esta manera si el modelo matematico aprende que caracteristicas suelen comprase juntas, podrian sugerir con alta precision prendas nuevas a los usuarios.
 \end{itemize}
 
+\subsection{Deriva de concepto (\textit{Concept Drift})}
+
+\subsubsection{Descripción del problema resuelto}
+La deriva de concepto se refiere a la situación en la que las relaciones estadísticas entre las variables de entrada y la variable objetivo cambian con el tiempo. En el contexto de los sistemas de recomendación, esto puede ocurrir cuando los gustos de los usuarios evolucionan, aparecen nuevas tendencias o se introducen nuevos productos al mercado \cite{wanas2019detection}. La deriva de concepto puede afectar negativamente el rendimiento de los modelos de recomendación si no se detecta y maneja adecuadamente, ya que el modelo puede volverse obsoleto y generar recomendaciones irrelevantes \cite{wanas2019detection}.
+
+El impacto de la solución propuesta para manejar la deriva de concepto es significativo, ya que permite a los sistemas de recomendación adaptarse a los cambios en las preferencias de los usuarios y en el mercado. Al implementar técnicas de detección de deriva de concepto, como el monitoreo continuo del rendimiento del modelo y la actualización periódica de los datos de entrenamiento, se puede mejorar la precisión y relevancia de las recomendaciones generadas \cite{wanas2019detection}. 
+
+Los usuarios finales se benefician al recibir recomendaciones más personalizadas y actualizadas, lo que mejora su experiencia de usuario y aumenta la probabilidad de que encuentren productos o contenido que realmente les interese. Además, las empresas que implementan sistemas de recomendación efectivos pueden aumentar la satisfacción del cliente, la retención y las ventas \cite{wanas2019detection}.
+
+\subsubsection{Descripción de la solución}
+Para abordar esta problemática, se implementó el algoritmo \textbf{IKCD (Incremental Knowledge Concept Drift)}, un enfoque de aprendizaje continuo y no supervisado diseñado específicamente para flujos de datos (\textit{data streams}). A diferencia de los métodos tradicionales que descartan el conocimiento previo o dependen de costosos datos etiquetados manualmente, el algoritmo IKCD utiliza datos no etiquetados para construir el modelo y aprovecha el conocimiento histórico preservado para adaptarse a los nuevos conceptos.
+
+A nivel arquitectónico, la solución se estructura de forma modular y cíclica. A continuación, se presenta un diagrama del flujo operativo del sistema:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{assets/DiagramaIKCD.png}
+\caption{Flujo operativo de la arquitectura del algoritmo IKCD.}
+\label{fig:flujo_ikcd}
+\end{figure}
+
+Como se ilustra en el diagrama, el diseño del algoritmo IKCD se divide fundamentalmente en dos fases interdependientes: la fase de entrenamiento y la fase de aprendizaje adaptativo. La \textbf{Fase de Entrenamiento} procesa una ventana de datos combinada (datos nuevos más datos históricos). En esta etapa se extraen las características textuales relevantes y se aplica un algoritmo de agrupamiento para establecer ``centroides de referencia'', los cuales representan los temas base de las noticias. Una vez que el modelo está construido, el sistema entra en la \textbf{Fase de Aprendizaje Adaptativo}, la cual opera continuamente monitoreando el flujo de datos entrante a través de una ``ventana de detección''. El clasificador evalúa estos nuevos datos y compara sus centroides con los centroides de referencia del modelo. Si la distancia supera un umbral predefinido, el sistema dispara una alarma de \textit{drift} (deriva), lo que activa el proceso de ``Reforma'' para construir una nueva ventana de entrenamiento mezclando estratégicamente los conceptos antiguos (ej. 30\% al 40\%) y los nuevos (60\% al 70\%) para actualizar el modelo sin perder la memoria histórica.
+
+Para lograr esta autonomía, la solución integra de manera sinérgica varias técnicas de Inteligencia Artificial:
+
+\begin{itemize}
+    \item \textbf{Procesamiento de Lenguaje Natural (NLP):} Utiliza un etiquetador (\textit{Stanford Tagger}) para extraer únicamente los sustantivos de las noticias. Aplica un proceso de \textit{stemming} para obtener la raíz de las palabras. Finalmente, utiliza la Frecuencia de Término (\textit{Term Frequency - TF}) para seleccionar el 15\% de las características más importantes, logrando una reducción dimensional crítica.
+    \item \textbf{Agrupamiento No Supervisado mediante K-means:} Permite prescindir de datos etiquetados agrupando las noticias por similitud en $K$ clústeres de forma automática.
+    \item \textbf{Distancia del Coseno:} La detección del cambio de concepto se realiza mediante un cálculo de distancia geométrica. Esta métrica evalúa la distancia entre el centroide de los datos recientes y el centroide de referencia. Al ser altamente efectiva para datos textuales dispersos, permite al sistema tomar decisiones precisas sobre cuándo es estrictamente necesario reentrenar el modelo.
+\end{itemize}
+
+\subsubsection{Interés Organizacional y Aplicabilidad en el Mercado}
+
+En el contexto del ecosistema tecnológico ecuatoriano, las organizaciones enfocadas en el entretenimiento digital y la distribución de contenido audiovisual, tales como \textbf{El Canal del Fútbol (ECDF)} o \textbf{CNT Play}, presentan un potencial interés técnico en la resolución de la deriva de concepto (\textit{concept drift}). El modelo de negocio de estas plataformas depende estrictamente de la retención del usuario (tiempo de visualización) mediante recomendaciones precisas. Dado que las preferencias de los espectadores son volátiles y cambian según temporadas deportivas, eventos virales o evolución de gustos personales, la implementación de un algoritmo adaptativo permitiría mantener la relevancia del contenido sugerido sin requerir intervenciones manuales constantes sobre los perfiles de los usuarios.
+
+\subsubsection*{Barreras de Implementación Local}
+A pesar de las ventajas teóricas, es altamente probable que la mayoría de estas organizaciones en Ecuador \textbf{no tengan el interés de desarrollar internamente} este tipo de soluciones algorítmicas complejas desde cero. Las principales razones son:
+
+\begin{itemize}
+    \item \textbf{Altos costos de I+D:} Desarrollar, entrenar y mantener arquitecturas de aprendizaje automático no supervisado requiere una fuerte inversión en Investigación y Desarrollo, así como la contratación de perfiles altamente especializados en \textit{Machine Learning} e Inteligencia Artificial, lo cual suele escapar de los presupuestos operativos locales \cite{aws_personalize}.
+    \item \textbf{Dependencia de soluciones SaaS (Cajas Negras):} En lugar de programar algoritmos híbridos propios, las empresas locales tienden a preferir la integración de servicios gestionados en la nube (como \textit{AWS Personalize} o \textit{Google Cloud Recommendations AI}). Estas plataformas de terceros ya manejan la deriva de concepto de forma interna y opaca, transformando un problema de desarrollo de software en un simple gasto operativo mensual \cite{aws_personalize}.
+\end{itemize}
+
+\subsubsection*{Perspectiva en América Latina}
+Si se expande el análisis al mercado regional de América Latina, el interés corporativo en resolver algorítmicamente este problema de forma interna (\textit{in-house}) crece exponencialmente debido a las economías de escala. Organizaciones de streaming masivo como \textbf{Vix (TelevisaUnivision)} o \textbf{Globoplay (Brasil)} tienen un interés crítico en estas arquitecturas \cite{boeira_globo} \cite{vix_televisaunivision}. 
+
+Al competir directamente con conglomerados globales de entretenimiento, estas plataformas procesan el comportamiento de millones de usuarios simultáneos. Para ellas, depender de soluciones genéricas de terceros resulta inviable por los altos costos de facturación por API. Por lo tanto, desarrollar algoritmos híbridos eficientes (similares al IKCD) que manejen la deriva de concepto de forma automática representa una ventaja competitiva fundamental \cite{boeira_globo} \cite{vix_televisaunivision}.
+
+
 
 \bibliographystyle{ieeetr}
 \bibliography{bibliografia}
+
 
 \end{document}

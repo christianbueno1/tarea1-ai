@@ -569,38 +569,45 @@ Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefi
 \item \textbf{Escalabilidad y procesamiento en tiempo real:} Las plataformas de entretenimiento digital requieren la transmisión y el procesamiento continuos de la telemetría de los usuarios. Calcular recomendaciones para millones de usuarios activos en tiempo real exige demasiado los recursos computacionales.
 \end{itemize}
 
+
+
+
+% Inserted expanded cold-start description (user requested)
 \subsection{Problema de arranque en frío}
-El \textbf{problema de arranque en frío} (\emph{cold-start problem}) es uno de los retos más críticos en los sistemas de recomendación, porque aparece cuando no existe suficiente información histórica para hacer predicciones precisas \cite{Wang_Xu_Li_Li_2025}.
+El \textbf{problema del inicio en frío} (\emph{cold-start problem}) es uno de los desafíos más críticos identificados en el desarrollo de sistemas de recomendación modernos, y su resolución mediante técnicas de Inteligencia Artificial ha transformado la eficiencia de las plataformas digitales.
 
-Este problema suele manifestarse de dos formas. Por un lado, cuando un usuario es nuevo, no hay suficientes interacciones previas para estimar sus preferencias. Por otro lado, cuando un ítem acaba de publicarse, tampoco existen valoraciones o registros de uso que permitan compararlo con otros elementos \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{Impacto en los algoritmos tradicionales}
-\textbf{Filtrado colaborativo:} estos métodos dependen casi por completo de interacciones previas, como calificaciones, compras o reproducciones \cite{Wang_Xu_Li_Li_2025}. Cuando faltan datos en la matriz de calificaciones, el sistema no puede identificar usuarios similares ni patrones de consumo, lo que reduce su capacidad de recomendación.
-
-\textbf{Filtrado basado en contenido:} aunque este enfoque utiliza las propiedades de los ítems, también presenta limitaciones si no logra capturar relaciones profundas entre las características de los productos \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{Estrategias propuestas para mitigarlo}
-Las fuentes coinciden en que los \textbf{enfoques híbridos} son una de las mejores alternativas para superar estas limitaciones, ya que combinan las ventajas del filtrado colaborativo y del filtrado basado en contenido \cite{Wang_Xu_Li_Li_2025}.
-
-\textbf{Uso de incrustaciones de características:} una propuesta innovadora consiste en aplicar \emph{Word2Vec} a las características de los ítems, tratándolas como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}. Esto permite obtener el método RELFsim, que calcula la similitud entre productos a partir de sus atributos inherentes y permite recomendar contenido nuevo incluso cuando todavía no ha recibido calificaciones \cite{DBLP:journals/corr/abs-2005-08148}.
-
-\textbf{Estrategias híbridas ponderadas y en cascada:} algunos métodos integran el filtrado basado en contenido para extraer vectores de características y el filtrado colaborativo para calcular similitudes entre usuarios \cite{Wang_Xu_Li_Li_2025}. Al combinar ambos enfoques mediante ponderación, se reduce tanto el arranque en frío del usuario como el del ítem.
-
-\textbf{Agrupamiento:} el análisis de conglomerados ayuda a estructurar el comportamiento histórico disponible y mejora la precisión cuando la información es escasa \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{RELFsim}
-El método \textbf{RELFsim} es un algoritmo de recomendación basado en contenido que usa técnicas de procesamiento de lenguaje natural para medir la similitud entre productos a partir de sus características \cite{DBLP:journals/corr/abs-2005-08148}.
-
-Su funcionamiento puede resumirse así:
+\subsubsection{Descripción del problema: El inicio en frío (Cold-Start)}
+El problema específico analizado es la \textbf{incapacidad de los sistemas de recomendación para generar inferencias precisas debido a la falta o insuficiencia de datos históricos} \cite{freecodecamp-cold-start-problem}. Este fenómeno ocurre principalmente en dos situaciones:
 \begin{itemize}
-\item Las características de los ítems, como género, actores o etiquetas, se tratan como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Al procesar esas secuencias de características, el sistema genera incrustaciones neuronales de características \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Esos vectores capturan relaciones implícitas entre las propiedades de los productos y permiten calcular qué tan relacionadas están las características entre sí, más allá de si son idénticas \cite{DBLP:journals/corr/abs-2005-08148}.
-\item A partir de esas relaciones, el método construye una representación vectorial para cada ítem \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Finalmente, la similitud entre dos ítems se obtiene comparando esas representaciones, y a ese cálculo se le denomina RELFsim \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Inicio en frío del usuario:} Se presenta cuando un nuevo usuario se registra en una plataforma y el sistema no posee un historial de sus preferencias, compras o calificaciones previas para ofrecerle contenido relevante \cite{freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Inicio en frío del ítem:} Ocurre cuando se añade contenido nuevo (por ejemplo, un videojuego en una plataforma o una película en un servicio de streaming) que aún no ha recibido interacciones o evaluaciones. Al no haber señales sociales, los algoritmos tradicionales de filtrado colaborativo no pueden recomendar este producto \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
 \end{itemize}
 
-Este enfoque resulta útil porque mantiene una precisión comparable a la del filtrado colaborativo puro y, al mismo tiempo, ayuda a resolver el problema del arranque en frío al recomendar contenido nuevo sin depender de interacciones históricas previas \cite{DBLP:journals/corr/abs-2005-08148,Wang_Xu_Li_Li_2025}.
+Este vacío de información genera una "matriz de calificaciones" escasamente poblada que deja al sistema incapaz de funcionar correctamente en las etapas iniciales \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+
+\subsubsection{El problema resuelto mediante técnicas de IA}
+El desafío fue abordado mediante la integración de técnicas avanzadas de IA y Procesamiento de Lenguaje Natural (NLP):
+\begin{itemize}
+	\item \textbf{Uso de Word2Vec y embeddings:} Se emplean modelos de IA para extraer \textbf{relaciones implícitas entre las características del contenido}, tratándolas como si fueran palabras para generar \emph{incrustaciones neuronales} (feature embeddings) \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Algoritmo RELFsim:} Esta técnica permite calcular la similitud entre productos basándose únicamente en sus atributos vectoriales, posibilitando la recomendación de ítems nuevos sin depender de calificaciones previas \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Sistemas híbridos y clustering:} Enfoques que combinan filtrado colaborativo, filtrado basado en contenido y análisis de conglomerados (clustering) ayudan a mitigar la escasez inicial de datos y a mejorar la robustez de las predicciones \cite{Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Impacto de la solución}
+La implementación de estas soluciones de IA tiene un impacto directo en la operatividad de los sistemas:
+\begin{itemize}
+	\item \textbf{Mejora de la precisión y diversidad:} El sistema puede ofrecer recomendaciones útiles desde el primer día, manteniendo precisión y diversidad incluso en catálogos extensos \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Reducción del abandono (Churn Rate):} Al proporcionar recomendaciones relevantes de manera inmediata, se disminuye la probabilidad de que nuevos usuarios abandonen la plataforma por falta de descubrimiento \cite{freecodecamp-cold-start-problem}.
+	\item \textbf{Mitigación de la sobrecarga de información:} Los algoritmos orientados por embeddings y similitud ayudan a guiar al usuario entre miles de opciones, mejorando la experiencia de descubrimiento \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Quién se beneficia de la solución}
+\begin{itemize}
+	\item \textbf{Los usuarios:} Reciben una experiencia personalizada y satisfactoria desde el primer contacto con la plataforma, ahorrando tiempo y esfuerzo en la búsqueda de contenido \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+	\item \textbf{Empresas y dueños de sistemas:} Mejoran la retención de clientes, la lealtad a la marca y la monetización del catálogo, al poder promocionar contenido nuevo de manera efectiva \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+% End inserted block
 
 \subsection{Escasez de Datos (\textit{Data Sparsity})}
 

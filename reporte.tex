@@ -3,9 +3,14 @@
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{graphicx}
 \usepackage{svg}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{adjustbox}
+\usepackage{xurl}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{url}
 
 \setlength{\parindent}{0pt}
 
@@ -369,7 +374,7 @@ Si el usuario A es similar al usuario B y al usuario B le gustó una película q
 
 \subsubsection*{Comparación con la similitud del coseno}
 \begin{center}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{5.7cm}|>{\raggedright\arraybackslash}p{5.7cm}|}
 \hline
 Pearson & Coseno \\
 \hline
@@ -467,9 +472,9 @@ Joker & 2 & 1 & 1 \\
 \end{center}
 
 \paragraph{Paso 2 --- Elevar al cuadrado las diferencias}
-\[
-1^2+1^2+(-1)^2+1^2=4
-\]
+\begin{align*}
+1^2 + 1^2 + (-1)^2 + 1^2 &= 4
+\end{align*}
 
 \paragraph{Paso 3 --- Raíz cuadrada}
 \[
@@ -539,7 +544,7 @@ Si los usuarios califican 100 películas:
 
 \subsubsection*{Comparación con Pearson y el coseno}
 \begin{center}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|>{\raggedright\arraybackslash}p{4.15cm}|}
 \hline
 Método & Mide & ¿Maneja el sesgo de calificación? \\
 \hline
@@ -551,7 +556,8 @@ Correlación de Pearson & Relación después de centrar & Sí \\
 \end{center}
 
 \subsubsection*{Recomendación práctica}
-Usa la distancia euclidiana cuando los datos estén normalizados, las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
+Usa la distancia euclidiana cuando los datos estén normalizados.
+También conviene cuando las escalas de calificación sean consistentes y el sistema sea pequeño o sencillo.
 
 Usa Pearson cuando los usuarios tengan distintos hábitos de calificación y la corrección del sesgo sea importante.
 
@@ -570,40 +576,100 @@ Sin embargo, en los recomendadores modernos a gran escala, generalmente se prefi
 \end{itemize}
 
 \subsection{Problema de arranque en frío}
-El \textbf{problema de arranque en frío} (\emph{cold-start problem}) es uno de los retos más críticos en los sistemas de recomendación, porque aparece cuando no existe suficiente información histórica para hacer predicciones precisas \cite{Wang_Xu_Li_Li_2025}.
+El \textbf{problema del inicio en frío} (\emph{cold-start problem}) es uno de los desafíos más críticos identificados en el desarrollo de sistemas de recomendación modernos, y su resolución mediante técnicas de Inteligencia Artificial ha transformado la eficiencia de las plataformas digitales.
 
-Este problema suele manifestarse de dos formas. Por un lado, cuando un usuario es nuevo, no hay suficientes interacciones previas para estimar sus preferencias. Por otro lado, cuando un ítem acaba de publicarse, tampoco existen valoraciones o registros de uso que permitan compararlo con otros elementos \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{Impacto en los algoritmos tradicionales}
-\textbf{Filtrado colaborativo:} estos métodos dependen casi por completo de interacciones previas, como calificaciones, compras o reproducciones \cite{Wang_Xu_Li_Li_2025}. Cuando faltan datos en la matriz de calificaciones, el sistema no puede identificar usuarios similares ni patrones de consumo, lo que reduce su capacidad de recomendación.
-
-\textbf{Filtrado basado en contenido:} aunque este enfoque utiliza las propiedades de los ítems, también presenta limitaciones si no logra capturar relaciones profundas entre las características de los productos \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{Estrategias propuestas para mitigarlo}
-Las fuentes coinciden en que los \textbf{enfoques híbridos} son una de las mejores alternativas para superar estas limitaciones, ya que combinan las ventajas del filtrado colaborativo y del filtrado basado en contenido \cite{Wang_Xu_Li_Li_2025}.
-
-\textbf{Uso de incrustaciones de características:} una propuesta innovadora consiste en aplicar \emph{Word2Vec} a las características de los ítems, tratándolas como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}. Esto permite obtener el método RELFsim, que calcula la similitud entre productos a partir de sus atributos inherentes y permite recomendar contenido nuevo incluso cuando todavía no ha recibido calificaciones \cite{DBLP:journals/corr/abs-2005-08148}.
-
-\textbf{Estrategias híbridas ponderadas y en cascada:} algunos métodos integran el filtrado basado en contenido para extraer vectores de características y el filtrado colaborativo para calcular similitudes entre usuarios \cite{Wang_Xu_Li_Li_2025}. Al combinar ambos enfoques mediante ponderación, se reduce tanto el arranque en frío del usuario como el del ítem.
-
-\textbf{Agrupamiento:} el análisis de conglomerados ayuda a estructurar el comportamiento histórico disponible y mejora la precisión cuando la información es escasa \cite{Wang_Xu_Li_Li_2025}.
-
-\subsubsection{RELFsim}
-El método \textbf{RELFsim} es un algoritmo de recomendación basado en contenido que usa técnicas de procesamiento de lenguaje natural para medir la similitud entre productos a partir de sus características \cite{DBLP:journals/corr/abs-2005-08148}.
-
-Su funcionamiento puede resumirse así:
+\subsubsection{Descripción del problema: El inicio en frío (Cold-Start)}
+El problema específico analizado es la \textbf{incapacidad de los sistemas de recomendación para generar inferencias precisas debido a la falta o insuficiencia de datos históricos} \cite{freecodecamp-cold-start-problem}. Este fenómeno ocurre principalmente en dos situaciones:
 \begin{itemize}
-\item Las características de los ítems, como género, actores o etiquetas, se tratan como si fueran palabras dentro de una oración \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Al procesar esas secuencias de características, el sistema genera incrustaciones neuronales de características \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Esos vectores capturan relaciones implícitas entre las propiedades de los productos y permiten calcular qué tan relacionadas están las características entre sí, más allá de si son idénticas \cite{DBLP:journals/corr/abs-2005-08148}.
-\item A partir de esas relaciones, el método construye una representación vectorial para cada ítem \cite{DBLP:journals/corr/abs-2005-08148}.
-\item Finalmente, la similitud entre dos ítems se obtiene comparando esas representaciones, y a ese cálculo se le denomina RELFsim \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Inicio en frío del usuario:} Se presenta cuando un nuevo usuario se registra en una plataforma y el sistema no posee un historial de sus preferencias, compras o calificaciones previas para ofrecerle contenido relevante \cite{freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Inicio en frío del ítem:} Ocurre cuando se añade contenido nuevo (por ejemplo, un videojuego en una plataforma o una película en un servicio de streaming) que aún no ha recibido interacciones o evaluaciones. Al no haber señales sociales, los algoritmos tradicionales de filtrado colaborativo no pueden recomendar este producto \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
 \end{itemize}
 
-Este enfoque resulta útil porque mantiene una precisión comparable a la del filtrado colaborativo puro y, al mismo tiempo, ayuda a resolver el problema del arranque en frío al recomendar contenido nuevo sin depender de interacciones históricas previas \cite{DBLP:journals/corr/abs-2005-08148,Wang_Xu_Li_Li_2025}.
+Este vacío de información genera una "matriz de calificaciones" escasamente poblada que deja al sistema incapaz de funcionar correctamente en las etapas iniciales \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+
+\subsubsection{Impacto de la solución}
+La implementación de estas soluciones de IA tiene un impacto directo en la operatividad de los sistemas:
+\begin{itemize}
+	\item \textbf{Mejora de la precisión y diversidad:} El sistema puede ofrecer recomendaciones útiles desde el primer día, manteniendo precisión y diversidad incluso en catálogos extensos \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+	\item \textbf{Reducción del abandono (Churn Rate):} Al proporcionar recomendaciones relevantes de manera inmediata, se disminuye la probabilidad de que nuevos usuarios abandonen la plataforma por falta de descubrimiento \cite{freecodecamp-cold-start-problem}.
+	\item \textbf{Mitigación de la sobrecarga de información:} Los algoritmos orientados por embeddings y similitud ayudan a guiar al usuario entre miles de opciones, mejorando la experiencia de descubrimiento \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Quién se beneficia de la solución}
+\begin{itemize}
+	\item \textbf{Los usuarios:} Reciben una experiencia personalizada y satisfactoria desde el primer contacto con la plataforma, ahorrando tiempo y esfuerzo en la búsqueda de contenido \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+	\item \textbf{Empresas y dueños de sistemas:} Mejoran la retención de clientes, la lealtad a la marca y la monetización del catálogo, al poder promocionar contenido nuevo de manera efectiva \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem, Wang_Xu_Li_Li_2025}.
+\end{itemize}
+
+\subsubsection{Descripción de la solución del problema}
+La solución implementada para resolver el \textbf{problema del inicio en frío} (\emph{cold-start}) se basa en la creación de \textbf{sistemas de recomendación híbridos} que utilizan Inteligencia Artificial para extraer conocimiento profundo de los datos, incluso cuando las interacciones de los usuarios son inexistentes o escasas \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
+
+\textbf{1. Descripción de la solución}
+La solución consiste en integrar técnicas de \textbf{procesamiento de lenguaje natural (NLP)} y \textbf{modelos neuronales} para que el sistema no dependa únicamente de las calificaciones históricas. En lugar de esperar a que un usuario califique un producto, la IA analiza los metadatos (género, descripción, etiquetas) para entender qué es el producto y a qué otros ítems se parece semánticamente \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+
+\textbf{Mi entendimiento de la solución:}
+Entiendo que la solución actúa como un "traductor" de características. Si un juego es nuevo y no tiene reseñas, la IA "lee" sus etiquetas y, mediante vectores matemáticos, determina que es similar a otros juegos exitosos. De este modo, el sistema puede recomendarlo de inmediato a usuarios con gustos afines, eliminando el periodo de invisibilidad del nuevo contenido.
+
+\textbf{2. La solución que utiliza IA: RELFsim y Word2Vec}
+La técnica principal utiliza el algoritmo \textbf{Word2Vec} de una manera innovadora. Tradicionalmente, Word2Vec relaciona palabras en oraciones; aquí, se utiliza para tratar las \textbf{características de los ítems como palabras} y generar \textbf{incrustaciones de características neuronales} (neural feature embeddings) \cite{DBLP:journals/corr/abs-2005-08148}.
+
+Diagrama del flujo de la solución (Arquitectura RELFsim):
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{assets/relfsim_hybrid_architecture.pdf}
+\caption{Arquitectura RELFsim para el sistema híbrido de recomendación.}
+\label{fig:relfsim-hybrid-architecture}
+\end{figure}
+
+\textbf{3. Técnicas de IA y Diseño de la Arquitectura}
+La arquitectura se diseña bajo un enfoque \textbf{híbrido} que combina lo mejor de dos mundos:
+\begin{itemize}
+	\item \textbf{Incrustaciones Neuronales (Word2Vec):} Capturan relaciones implícitas entre características, por ejemplo relaciones semánticas entre etiquetas que no son idénticas pero están relacionadas \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Algoritmo RELFsim:} Utiliza las incrustaciones para construir representaciones vectoriales de los productos; consigue una precisión comparable al filtrado colaborativo usando solo datos de contenido \cite{DBLP:journals/corr/abs-2005-08148}.
+	\item \textbf{Estrategia Híbrida Ponderada:} Combina clustering del comportamiento de usuario con vectores de contenido mediante ponderaciones adaptativas, de modo que el componente colaborativo gana peso conforme se acumulan interacciones \cite{Wang_Xu_Li_Li_2025}.
+	\item \textbf{Mitigación del cold-start:} Integrando RELFsim dentro de un sistema colaborativo basado en ítems, la arquitectura puede apoyarse totalmente en contenido cuando faltan interacciones, y migrar gradualmente a un balance híbrido cuando llegan datos \cite{DBLP:journals/corr/abs-2005-08148, freecodecamp-cold-start-problem}.
+\end{itemize}
+
+% agregar despues de esta linea
+% agregar despues de esta linea
+
+\subsubsection{Organizaciones en Ecuador interesadas en resolver el inicio en frío}
+
+En Ecuador, el interés por resolver el problema del inicio en frío (cold-start) es elevado debido a la rápida adopción de la IA: se estima que para 2025, el 40% de las empresas ecuatorianas utilizarán herramientas de automatización impulsadas por esta tecnología \cite{ekos-empresas-ia, tudatos-ecuador-ia}.
+
+\begin{enumerate}
+\item \textbf{Servicio Nacional de Contratación Pública (SERCOP)}
+
+Esta es la institución con el interés más crítico en aplicar sistemas de recomendación avanzados \cite{ia-explicable}.
+
+\textbf{Por qué:} Existe una investigación dedicada a implementar un sistema de recomendación para las licitaciones públicas del SERCOP que utilice IA Explicable (XAI) \cite{ia-explicable}. Resolver el inicio en frío es vital para garantizar que nuevos proveedores nacionales (que no tienen historial en el sistema) puedan ser recomendados de manera justa frente a proveedores extranjeros o antiguos, promoviendo la equidad y transparencia \cite{ia-explicable}.
+
+\item \textbf{Tusdatos}
+
+Esta organización ecuatoriana se especializa en la validación de identidad y antecedentes en tiempo real \cite{tudatos-ecuador-ia}.
+
+\textbf{Por qué:} Utilizan IA para agilizar el onboarding de usuarios y procesos de selección de personal \cite{tudatos-ecuador-ia}. El problema del inicio en frío les afecta cuando deben evaluar a personas o empresas nuevas sin un historial previo en bases de datos, requiriendo algoritmos que puedan generar perfiles de riesgo confiables de forma inmediata \cite{tudatos-ecuador-ia}.
+
+\item \textbf{Sector de Salud (Ej. Plan Vital)}
+
+Organizaciones de salud en el país están invirtiendo en tecnología para optimizar la atención al paciente \cite{ekos-empresas-ia}.
+
+\textbf{Por qué:} Empresas como Plan Vital buscan cerrar la brecha de accesibilidad mediante soluciones tecnológicas \cite{ekos-empresas-ia}. La IA permite personalizar servicios y diagnósticos médicos; resolver el inicio en frío permite que un nuevo paciente o un nuevo tratamiento sea integrado y recomendado correctamente por el sistema sin necesidad de acumular años de datos previos \cite{ekos-empresas-ia}.
+
+\item \textbf{Universidad de Guayaquil}
+
+\textbf{Por qué:} Investigadores de esta universidad han liderado el desarrollo de prototipos de IA Explicable aplicados a sistemas de recomendación en el contexto de la contratación pública en Ecuador \cite{ia-explicable}. Su interés es académico y técnico, buscando superar barreras como la falta de talento especializado en el país \cite{tudatos-ecuador-ia, ia-explicable}.
+\end{enumerate}
+
+\subsubsection{Interés en América Latina}
+En el resto de la región, el interés está liderado por grandes proveedores de infraestructura y servicios:
+
+\begin{itemize}
+\item \textbf{Amazon Web Services (AWS):} Ha realizado inversiones directas en México y Brasil para potenciar el crecimiento de la IA, lo que incluye mejorar la eficiencia de sus servicios de recomendación en la nube \cite{tudatos-ecuador-ia}.
+\item \textbf{Plataformas de Entretenimiento:} Empresas como Spotify y Netflix son pioneras en el uso de cuestionarios iniciales durante el registro para que sus sistemas capturen preferencias básicas y eviten que el usuario nuevo reciba recomendaciones genéricas \cite{freecodecamp-cold-start-problem}.
+\end{itemize}
 
 \subsection{Escasez de Datos (\textit{Data Sparsity})}
-
 \begin{itemize}
 
 	\item \textbf{Descripcion del problema resuelto:} El problema especifico analizado en este punto es la escasez de datos (\textit{Data Spartsity}), una limitacion critica que llega a afectar la eficacia y rendimiento de los sistemas de recomendacion basados en filtrado colaborativo puro \cite{DBLP:journals/corr/abs-2005-08148}. Estos algoritmos se basan en las interacciones de los usuarios, para asi generar una matriz de clasificaciones identificando las preferencias de los usuarios \cite{DBLP:journals/corr/abs-2005-08148}, el problema es que cuando existen muy pocas interacciones el metodo tradicional empieza a fallar y no encuentra recomendaciones apropiadas, este problema sucede con usuarios mas recientes \cite{DBLP:journals/corr/abs-2005-08148}.

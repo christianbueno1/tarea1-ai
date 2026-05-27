@@ -728,3 +728,18 @@ Las fuentes coinciden en que los **enfoques híbridos** son la mejor forma de su
 *   **Agrupamiento (Clustering):** El uso de análisis de conglomerados para modelar el comportamiento histórico ayuda a estructurar los datos disponibles y mejorar la precisión cuando la información es escasa.\cite{Wang_Xu_Li_Li_2025}
 
 En conclusión, la integración de técnicas de procesamiento de lenguaje natural (como los *feature embeddings*) dentro de sistemas híbridos permite que el sistema "entienda" el contenido nuevo sin depender de la interacción social previa, resolviendo así el vacío de información del inicio en frío.\cite{Wang_Xu_Li_Li_2025} \cite{DBLP:journals/corr/abs-2202-08677}
+
+---
+El método **RELFsim** es un algoritmo de recomendación basado en contenido que utiliza técnicas de procesamiento de lenguaje natural para determinar la similitud entre productos basándose en sus características \cite{DBLP:journals/corr/abs-2005-08148}.
+
+Su funcionamiento se desglosa en los siguientes pasos técnicos:
+
+1.  **Tratamiento de características como palabras:** A diferencia del uso convencional de **Word2Vec** (que analiza palabras en oraciones), este método toma las **características de los ítems** (como género, actores o etiquetas) y las trata como si fueran **palabras dentro de una oración** \cite{DBLP:journals/corr/abs-2005-08148}.
+2.  **Generación de incrustaciones (Embeddings):** Al procesar estas "oraciones" de características, el sistema genera **incrustaciones de características neuronales** (*neural feature embeddings*) \cite{DBLP:journals/corr/abs-2005-08148}. Estas incrustaciones son vectores matemáticos que capturan las **relaciones implícitas** entre las distintas propiedades de los productos \cite{DBLP:journals/corr/abs-2005-08148}.
+3.  **Cálculo de relación entre características:** Gracias a estos vectores, el sistema puede calcular qué tan relacionadas están las características entre sí, y no solo si son idénticas \cite{DBLP:journals/corr/abs-2005-08148}.
+4.  **Representación vectorial de los ítems:** Utilizando estas relaciones de características previamente extraídas, el método determina una **representación vectorial para cada ítem** \cite{DBLP:journals/corr/abs-2005-08148}.
+5.  **Cálculo de similitud (RELFsim):** Finalmente, la similitud entre dos ítems se calcula comparando sus representaciones vectoriales resultantes. A este proceso específico de calcular la similitud entre ítems basándose en la relación de sus características se le denomina **RELFsim** \cite{DBLP:journals/corr/abs-2005-08148}.
+
+**Propósito y Beneficios:**
+*   **Precisión:** Permite predecir las preferencias de un usuario por un conjunto de ítems con una efectividad comparable al filtrado colaborativo puro \cite{DBLP:journals/corr/abs-2005-08148}.
+*   **Solución al Inicio en Frío:** Este algoritmo se integra a menudo dentro de sistemas de filtrado colaborativo basados en ítems para mejorar la precisión y resolver el problema del **inicio en frío** (*cold-start*) \cite{DBLP:journals/corr/abs-2005-08148}. Al utilizar vectores de características, permite recomendar contenidos nuevos de los que no se tienen calificaciones previas, superando las limitaciones de los enfoques que dependen únicamente de la interacción histórica \cite{DBLP:journals/corr/abs-2005-08148, Wang_Xu_Li_Li_2025}.
